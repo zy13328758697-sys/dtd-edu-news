@@ -11,6 +11,7 @@ import time
 import requests
 from datetime import datetime, timezone, timedelta
 from ddgs import DDGS
+
 # ============================================================
 # 配置
 # ============================================================
@@ -51,14 +52,14 @@ def search_ddg(query, num=5):
     """调用 DuckDuckGo 搜索（免费，无需API Key）"""
     results = []
     try:
-        with DDGS() as ddgs:
-            for item in ddgs.text(query, region="cn-zh", max_results=num):
-                results.append({
-                    "title": item.get("title", ""),
-                    "snippet": item.get("body", ""),
-                    "source": item.get("href", "").split("/")[2] if "/" in item.get("href", "") else "",
-                    "url": item.get("href", ""),
-                })
+        items = DDGS().text(query, region="cn-zh", max_results=num)
+        for item in items:
+            results.append({
+                "title": item.get("title", ""),
+                "snippet": item.get("body", ""),
+                "source": item.get("href", "").split("/")[2] if "/" in item.get("href", "") else "",
+                "url": item.get("href", ""),
+            })
     except Exception as e:
         log(f"  DuckDuckGo搜索异常: {e}")
     return results
