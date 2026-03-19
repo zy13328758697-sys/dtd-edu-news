@@ -10,8 +10,7 @@ import re
 import time
 import requests
 from datetime import datetime, timezone, timedelta
-from duckduckgo_search import DDGS
-
+from ddgs import DDGS
 # ============================================================
 # 配置
 # ============================================================
