@@ -1,0 +1,35 @@
+name: 每日更新教育资讯
+
+on:
+  schedule:
+    - cron: '0 0 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 安装Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 安装依赖
+        run: pip install requests duckduckgo-search
+      - name: 运行更新脚本
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python auto_update.py
+      - name: 提交更新
+        run: |
+          git config user.name "DTD News Bot"
+          git config user.email "bot@dtd-edu.cn"
+          git add docs/index.html
+          git diff --staged --quiet || git commit -m "更新教育日报 $(date +%Y-%m-%d)"
+          git push
