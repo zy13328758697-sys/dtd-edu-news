@@ -207,7 +207,7 @@ def render_html(data):
         collapsed_cls = " collapsed" if idx >= 5 else ""
         url = item.get("url", "#")
         sh_html += f'''<div class="sh-item{collapsed_cls}">
-<div class="sh-item-tag">{item["tag"]}</div>
+<div class="sh-item-tag">{item.get('tag', '综合')}</div>
 <div class="sh-item-title"><a href="{url}" target="_blank" rel="noopener">{item["title"]}</a></div>
 <div class="sh-item-desc">{item["desc"]}</div>
 <div class="sh-item-meta">{item["source_date"]} · <a class="ncard-source-link" href="{url}" target="_blank" rel="noopener">原文</a></div>
