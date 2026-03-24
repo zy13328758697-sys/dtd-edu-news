@@ -116,7 +116,7 @@ def call_deepseek(all_news):
    - 国际教育视野（2-3条）
    - 教育深度观察（1-2条）
 3. 每条新闻包含：tag（2-4字标签）、tag_class（CSS类名，从以下选择：t-policy/t-ministry/t-enroll/t-compete/t-conf/t-lang/t-insight/t-trend/t-ai）、title、summary（100-150字）、perspective（德英乐视角，40-60字）、source、date、url（新闻原文链接，直接使用素材中提供的url）
-4. 从上海相关新闻中提取6-10条作为"上海专栏"，每条包含tag、title、desc、source_date、url字段
+4. 从上海相关新闻中提取6-10条作为"上海专栏"，每条包含url字段
 5. 输出纯JSON，不要markdown代码块
 
 【新闻素材】
@@ -179,7 +179,7 @@ def render_html(data):
     for i, section in enumerate(data.get("sections", [])):
         icon = sec_icons[i % len(sec_icons)]
         sid = sec_ids[i] if i < len(sec_ids) else f"s-{i}"
-        sections_html += f'<div class="sec-head" id="{sid}"><div class="sec-icon {icon}"></div><div class="sec-title">{section.get("name", "")}</div><div class="sec-line"></div></div>\n<div class="news-list">\n'
+        sections_html += f'<div class="sec-head" id="{sid}"><div class="sec-icon {icon}"></div><div class="sec-title">{section["name"]}</div><div class="sec-line"></div></div>\n<div class="news-list">\n'
 
         for j, news in enumerate(section.get("news", [])):
             tc = news.get("tag_class", "t-policy")
@@ -187,13 +187,13 @@ def render_html(data):
             url = news.get("url", "#")
             sections_html += f'''<div class="ncard{featured_cls}" data-tag="{tc}">
 <div class="ncard-body">
-<div class="ncard-tag {tc}">{news.get("tag", "资讯")}</div>
-<div class="ncard-title"><a href="{url}" target="_blank" rel="noopener">{news.get("title", "")}</a></div>
-<div class="ncard-summary">{news.get("summary", "")}</div>
+<div class="ncard-tag {tc}">{news["tag"]}</div>
+<div class="ncard-title"><a href="{url}" target="_blank" rel="noopener">{news["title"]}</a></div>
+<div class="ncard-summary">{news["summary"]}</div>
 <div class="ncard-meta"><span>来源：{news.get("source","")}</span><span>{news.get("date","")}</span><a class="ncard-source-link" href="{url}" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">{news.get("perspective", "")}</div></div>
+<div class="persp-text">{news["perspective"]}</div></div>
 </div>\n'''
             total_news += 1
 
@@ -207,10 +207,10 @@ def render_html(data):
         collapsed_cls = " collapsed" if idx >= 5 else ""
         url = item.get("url", "#")
         sh_html += f'''<div class="sh-item{collapsed_cls}">
-<div class="sh-item-tag">{item.get("tag", "资讯")}</div>
-<div class="sh-item-title"><a href="{url}" target="_blank" rel="noopener">{item.get("title", "")}</a></div>
-<div class="sh-item-desc">{item.get("desc", item.get("description", ""))}</div>
-<div class="sh-item-meta">{item.get("source_date", item.get("source", ""))} · <a class="ncard-source-link" href="{url}" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">{item["tag"]}</div>
+<div class="sh-item-title"><a href="{url}" target="_blank" rel="noopener">{item["title"]}</a></div>
+<div class="sh-item-desc">{item["desc"]}</div>
+<div class="sh-item-meta">{item["source_date"]} · <a class="ncard-source-link" href="{url}" target="_blank" rel="noopener">原文</a></div>
 </div>\n'''
 
     # 读取模板并替换
@@ -244,64 +244,27 @@ def main():
     log(f"===== 教育日报自动更新 {today.strftime('%Y-%m-%d')} =====")
 
     if not DEEPSEEK_KEY:
-        log("❌ 错误：缺少API密钥！")
-        log("请在GitHub仓库 Settings → Secrets → Actions 中添加 DEEPSEEK_API_KEY")
-        raise SystemExit(1)
+        log("错误：缺少API密钥，请在GitHub Secrets中配置 DEEPSEEK_API_KEY")
+        return
 
-    log(f"✓ API密钥已配置（长度={len(DEEPSEEK_KEY)}）")
-
-    # 第1步：搜索新闻
     log("第1步：搜索新闻...")
-    try:
-        all_news = fetch_all_news()
-        total = sum(len(v) for v in all_news.values())
-        log(f"✓ 共抓取 {total} 条新闻")
-        if total == 0:
-            log("⚠ 警告：未搜到任何新闻，可能是网络问题，将使用空数据继续")
-    except Exception as e:
-        log(f"❌ 搜索新闻失败: {e}")
-        raise
+    all_news = fetch_all_news()
+    total = sum(len(v) for v in all_news.values())
+    log(f"共抓取 {total} 条新闻")
 
-    # 第2步：AI生成内容
-    log("第2步：调用DeepSeek AI生成内容...")
-    try:
-        structured = call_deepseek(all_news)
-        news_count = sum(len(s.get("news", [])) for s in structured.get("sections", []))
-        sh_count = len(structured.get("shanghai", []))
-        log(f"✓ 生成 {news_count} 条主新闻 + {sh_count} 条上海专栏")
-    except requests.exceptions.HTTPError as e:
-        log(f"❌ DeepSeek API调用失败！HTTP状态码: {e.response.status_code}")
-        log(f"   响应内容: {e.response.text[:500]}")
-        if e.response.status_code == 401:
-            log("   原因：API Key无效或已过期，请检查DEEPSEEK_API_KEY是否正确")
-        elif e.response.status_code == 402:
-            log("   原因：账户余额不足，请登录 platform.deepseek.com 充值")
-        elif e.response.status_code == 429:
-            log("   原因：请求频率超限，请稍后重试")
-        raise
-    except Exception as e:
-        log(f"❌ AI生成内容失败: {type(e).__name__}: {e}")
-        raise
+    log("第2步：AI生成内容...")
+    structured = call_deepseek(all_news)
+    news_count = sum(len(s.get("news", [])) for s in structured.get("sections", []))
+    sh_count = len(structured.get("shanghai", []))
+    log(f"生成 {news_count} 条主新闻 + {sh_count} 条上海专栏")
 
-    # 第3步：渲染HTML
     log("第3步：渲染HTML...")
-    try:
-        html = render_html(structured)
-        log(f"✓ HTML生成完成（{len(html)} 字符）")
-    except Exception as e:
-        log(f"❌ 渲染HTML失败: {e}")
-        raise
+    html = render_html(structured)
 
-    # 第4步：保存文件
     log("第4步：保存文件...")
-    try:
-        save(html)
-        log("✓ 文件保存成功")
-    except Exception as e:
-        log(f"❌ 保存文件失败: {e}")
-        raise
+    save(html)
 
-    log("===== ✓ 全部完成! =====")
+    log("===== 完成! =====")
 
 
 if __name__ == "__main__":
