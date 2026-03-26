@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>德英乐教育·教育行业资讯</title>
+<style>
+/* === RESET & VARIABLES === */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#171C61;--navy-d:#0e1245;--navy-l:#2a3080;
+  --red:#FF3547;--red-l:#fff0f1;--red-d:#cc2a39;
+  --blue:#337AB7;--blue-l:#1E83F0;
+  --sh-blue:#1E83F0;--sh-blue-bg:#eef5ff;--sh-blue-border:#b3d4fc;
+  --txt:#333;--txt2:#555;--txt3:#888;--bg:#FAFBFC;--card:#fff;
+  --border:#e8e8e8;--radius:10px;
+  --font:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif;
+  --shadow-sm:0 1px 3px rgba(23,28,97,.04);
+  --shadow-md:0 4px 16px rgba(23,28,97,.07);
+  --shadow-lg:0 8px 30px rgba(23,28,97,.12);
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1.7;transition:background .3s,color .3s}
+
+/* === DARK MODE === */
+.dark{--txt:#e0e0e0;--txt2:#aaa;--txt3:#777;--bg:#0d1020;--card:#151c30;--border:#253050}
+.dark .topbar{background:#080c1a}
+.dark .topbar-glow{background:linear-gradient(90deg,var(--red),var(--blue-l),var(--red))}
+.dark .site-header{background:#0a0e28}
+.dark .hero{background:linear-gradient(135deg,#080c1a 0%,#101840 50%,#1a2260 100%)}
+.dark .ncard-persp{background:#1a1530;border-top-color:#253050}
+.dark .persp-label{color:var(--red)}
+.dark .persp-text{color:#e0a0a8}
+.dark .sh-section{border-color:#1e3a6c}
+.dark .sh-item:hover{background:#1a2240}
+.dark .sh-item{border-bottom-color:#1e2a48}
+.dark .filter-btn{background:var(--card);border-color:var(--border);color:var(--txt2)}
+.dark .filter-btn:hover{border-color:var(--navy-l);color:#ccc}
+.dark .filter-btn.active{background:var(--navy);border-color:var(--navy)}
+.dark .stat-card{background:var(--card);border-color:var(--border)}
+.dark .site-footer{background:#080c1a}
+.dark .trend-list li{border-bottom-color:#253050}
+.dark .dark-toggle{color:var(--red);border-color:rgba(255,53,71,.3)}
+.dark .key-points-bar{background:var(--card);border-color:var(--border)}
+.dark .kp-item{background:rgba(23,28,97,.15);border-color:var(--border);color:var(--txt)}
+.dark .kp-item:hover{background:rgba(23,28,97,.25)}
+.dark .sec-head{background:rgba(255,255,255,.03)}
+.dark .sec-divider{border-color:#253050}
+.dark .share-toast{background:#1a2240;color:var(--txt)}
+.dark .mobile-share-btn{background:var(--navy-l)}
+
+/* === PROGRESS BAR === */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),var(--blue-l));z-index:999;width:0;transition:width .1s}
+
+/* === BACK TO TOP === */
+.back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:all .3s;z-index:200;box-shadow:var(--shadow-lg)}
+.back-top.visible{opacity:1;transform:translateY(0)}
+.back-top:hover{background:var(--navy-l);transform:translateY(-2px)}
+
+/* === LAYOUT === */
+.site-wrapper{min-height:100vh;display:flex;flex-direction:column}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* === TOPBAR === */
+.topbar{background:var(--navy-d);padding:6px 0;font-size:12px;color:rgba(255,255,255,.5);position:relative}
+.topbar .container{display:flex;justify-content:space-between;align-items:center}
+.topbar-glow{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--navy),var(--red),var(--blue-l),var(--red),var(--navy));background-size:200% 100%;animation:topbarGlow 4s linear infinite}
+@keyframes topbarGlow{0%{background-position:0% 0}100%{background-position:200% 0}}
+
+/* === HEADER === */
+.site-header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;border-radius:8px;object-fit:contain;background:#fff;padding:2px}
+.logo-text{color:#fff;font-size:18px;font-weight:700;letter-spacing:1px}
+.logo-text span{color:var(--red)}
+.logo-sub{color:rgba(255,255,255,.45);font-size:11px;letter-spacing:2px;margin-top:1px}
+nav{display:flex;gap:4px;align-items:center}
+nav a{color:rgba(255,255,255,.7);font-size:14px;padding:6px 14px;border-radius:6px;transition:all .2s;font-weight:500}
+nav a:hover,nav a.active{color:#fff;background:rgba(255,255,255,.1)}
+nav a.sh-nav{color:var(--red);border:1px solid rgba(255,53,71,.3)}
+nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
+nav a.nav-active{color:#fff;background:rgba(255,255,255,.15)}
+.dark-toggle{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);cursor:pointer;padding:5px 10px;border-radius:20px;font-size:13px;margin-left:8px;transition:all .2s}
+.dark-toggle:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* === SHARE BUTTON (HEADER) === */
+.share-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);cursor:pointer;padding:5px 10px;border-radius:20px;font-size:13px;margin-left:4px;transition:all .2s;font-family:var(--font)}
+.share-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* === SHARE TOAST === */
+.share-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--card);color:var(--txt);padding:10px 24px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);font-size:14px;font-weight:600;z-index:500;opacity:0;transition:all .3s;pointer-events:none;border:1px solid var(--border)}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* === HAMBURGER === */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:4px;width:40px;height:40px;align-items:center;justify-content:center;position:relative}
+.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s;position:absolute}
+.hamburger span:nth-child(1){transform:translateY(-7px)}
+.hamburger span:nth-child(2){transform:translateY(0)}
+.hamburger span:nth-child(3){transform:translateY(7px)}
+.hamburger.open span:nth-child(1){transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg)}
+.mobile-nav{display:none;background:var(--navy-d);padding:0 20px;flex-direction:column;gap:2px;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),padding .35s cubic-bezier(.4,0,.2,1)}
+.mobile-nav a{color:rgba(255,255,255,.7);font-size:14px;padding:10px 14px;border-radius:6px;display:block;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.mobile-nav a:hover,.mobile-nav a.active{color:#fff;background:rgba(255,255,255,.08)}
+.mobile-nav.open{display:flex;max-height:500px;padding:12px 20px}
+
+/* === HERO === */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#1a2070 50%,var(--navy-l) 100%);padding:40px 0 36px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-30%;right:-10%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,53,71,.06) 0%,transparent 70%)}
+.hero::after{content:'';position:absolute;bottom:-40%;left:-5%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(30,131,240,.06) 0%,transparent 70%)}
+.hero-deco{position:absolute;top:20px;right:60px;width:120px;height:120px;border:1px solid rgba(255,53,71,.08);border-radius:50%;opacity:.5}
+.hero-deco2{position:absolute;bottom:10px;right:180px;width:60px;height:60px;border:1px solid rgba(255,255,255,.05);border-radius:8px;transform:rotate(45deg)}
+.hero .container{position:relative;z-index:1}
+.hero-badge{display:inline-block;background:rgba(255,53,71,.15);color:#ff8a95;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:1px;margin-bottom:14px;backdrop-filter:blur(4px)}
+.hero-title{color:#fff;font-size:30px;font-weight:700;line-height:1.4;margin-bottom:10px}
+.hero-desc{color:rgba(255,255,255,.55);font-size:14px;line-height:1.8;max-width:700px}
+
+/* === STATS BAR === */
+.stats-bar{padding:20px 0;margin-top:-24px;position:relative;z-index:2}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px 20px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stat-icon.navy-bg{background:linear-gradient(135deg,rgba(23,28,97,.1),rgba(23,28,97,.05));color:var(--navy)}
+.stat-icon.gold-bg{background:linear-gradient(135deg,rgba(255,53,71,.1),rgba(255,53,71,.05));color:var(--red)}
+.stat-icon.blue-bg{background:linear-gradient(135deg,rgba(30,131,240,.1),rgba(30,131,240,.05));color:var(--sh-blue)}
+.stat-icon.green-bg{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.05));color:#10b981}
+.stat-num{font-size:22px;font-weight:700;color:var(--txt);line-height:1.2}
+.stat-label{font-size:12px;color:var(--txt3);margin-top:2px}
+
+/* === KEY POINTS BAR === */
+.key-points-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:4px;box-shadow:var(--shadow-sm)}
+.kp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.kp-label{font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.5px;white-space:nowrap}
+.kp-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.kp-scroll::-webkit-scrollbar{height:3px}
+.kp-scroll::-webkit-scrollbar-track{background:transparent}
+.kp-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.kp-item{flex-shrink:0;max-width:280px;background:rgba(23,28,97,.04);border:1px solid rgba(23,28,97,.08);border-radius:6px;padding:6px 14px;font-size:12.5px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .2s;cursor:default}
+.kp-item:hover{background:rgba(23,28,97,.08);color:var(--txt)}
+.kp-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;flex-shrink:0}
+.kp-dot.navy{background:var(--navy)}.kp-dot.red{background:var(--red)}.kp-dot.blue{background:var(--sh-blue)}.kp-dot.green{background:#10b981}
+
+/* === FILTER BAR === */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;padding:16px 0;border-bottom:1px solid var(--border)}
+.filter-btn{background:var(--card);border:1px solid var(--border);color:var(--txt2);font-size:12px;padding:5px 14px;border-radius:20px;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.filter-btn:hover{border-color:var(--navy-l);color:var(--navy)}
+.filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);border-radius:20px}
+
+/* === MAIN === */
+.main{padding:0 0 40px}
+.main .container{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+
+/* === SECTION HEAD === */
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:10px 14px;border-radius:8px;background:rgba(23,28,97,.02)}
+.sec-icon{width:6px;height:22px;border-radius:3px;flex-shrink:0}
+.sec-icon.navy{background:var(--navy)}.sec-icon.gold{background:var(--red)}.sec-icon.blue{background:var(--sh-blue)}
+.sec-title{font-size:18px;font-weight:700;color:var(--txt)}
+.sec-line{flex:1;height:1px;background:var(--border)}
+
+/* === SECTION DIVIDER === */
+.sec-divider{border:none;border-top:1px dashed var(--border);margin:12px 0 28px;position:relative}
+.sec-divider::after{content:'';display:block;width:40px;height:3px;background:linear-gradient(90deg,var(--navy),var(--red));border-radius:2px;margin:0 auto;position:relative;top:-2px}
+
+/* === NEWS CARDS === */
+.news-list{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
+.ncard{background:var(--card);border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);overflow:hidden;transition:box-shadow .3s,transform .2s;opacity:0;transform:translateY(16px);animation:fadeUp .5s ease forwards;border-left:2px solid transparent}
+.ncard:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.ncard-body{padding:18px 20px 14px}
+.ncard-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:3px;margin-bottom:8px;letter-spacing:.3px;cursor:pointer;transition:opacity .2s}
+.ncard-tag:hover{opacity:.8}
+.t-policy{background:#eef3ff;color:#4a6fa5}
+.t-ministry{background:#fff0e6;color:#c4702a}
+.t-enroll{background:#e8f5e8;color:#3d7a3d}
+.t-compete{background:#ffeef0;color:#c44a55}
+.t-conf{background:#f0ecff;color:#6a5acd}
+.t-lang{background:#e8f0f8;color:#4a7a9a}
+.t-insight{background:#f8f0ff;color:#7a5a8a}
+.t-sh{background:#eff6ff;color:#2563eb}
+.t-trend{background:#f0fdf4;color:#16a34a}
+.t-ai{background:#fef3c7;color:#b45309}
+
+/* Tag-based left borders for cards */
+.ncard[data-tag="t-policy"]{border-left-color:#4a6fa5}
+.ncard[data-tag="t-ministry"]{border-left-color:#c4702a}
+.ncard[data-tag="t-enroll"]{border-left-color:#3d7a3d}
+.ncard[data-tag="t-compete"]{border-left-color:#c44a55}
+.ncard[data-tag="t-conf"]{border-left-color:#6a5acd}
+.ncard[data-tag="t-lang"]{border-left-color:#4a7a9a}
+.ncard[data-tag="t-insight"]{border-left-color:#7a5a8a}
+.ncard[data-tag="t-sh"]{border-left-color:#2563eb}
+.ncard[data-tag="t-trend"]{border-left-color:#16a34a}
+.ncard[data-tag="t-ai"]{border-left-color:#b45309}
+
+.ncard-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:8px}
+.ncard-title a{color:var(--txt);text-decoration:none;transition:color .2s}
+.ncard-title a:hover{color:var(--navy)}
+.ncard-summary{font-size:14px;color:var(--txt2);line-height:1.85}
+.ncard-meta{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:12px;color:var(--txt3);flex-wrap:wrap}
+.ncard-source-link{color:var(--navy);text-decoration:none;font-weight:600;transition:color .2s;margin-left:auto}
+.ncard-source-link:hover{color:var(--red)}
+.sh-item-title a{color:var(--txt);text-decoration:none;transition:color .15s}
+.sh-item-title a:hover{color:var(--navy)}
+
+/* Featured card (first in section) */
+.ncard.featured{border-left:3px solid var(--red);box-shadow:var(--shadow-sm)}
+.ncard.featured .ncard-title{font-size:17px}
+
+/* Perspective */
+.ncard-persp{background:linear-gradient(135deg,#fff5f6 0%,#fff0f2 50%,#fff5f8 100%);border-top:1px solid #fde0e3;padding:12px 20px}
+.persp-label{font-size:11px;font-weight:700;color:var(--red);letter-spacing:.5px;margin-bottom:4px}
+.persp-label::before{content:'\25C6 '}
+.persp-text{font-size:13px;color:#8a3040;line-height:1.8}
+
+/* === SHANGHAI SECTION === */
+.sh-section{background:var(--card);border:2px solid var(--sh-blue-border);border-radius:var(--radius);overflow:hidden;position:sticky;top:80px;box-shadow:var(--shadow-sm)}
+.sh-header{background:linear-gradient(135deg,#0e1245,var(--navy));padding:16px 20px;display:flex;align-items:center;gap:10px}
+.sh-header-text{color:#fff;font-size:16px;font-weight:700;letter-spacing:.5px}
+.sh-header-sub{color:rgba(255,255,255,.6);font-size:11px;margin-left:auto;letter-spacing:1px}
+.sh-list{padding:4px 0}
+.sh-item{padding:14px 18px;border-bottom:1px solid #f0f0f0;transition:background .15s}
+.sh-item:last-child{border-bottom:none}
+.sh-item:hover{background:#fafbff}
+.sh-item-tag{display:inline-block;font-size:10px;font-weight:600;padding:1px 8px;border-radius:3px;background:rgba(23,28,97,.06);color:var(--navy);margin-bottom:5px}
+.sh-item-title{font-size:14px;font-weight:600;color:var(--txt);line-height:1.5;margin-bottom:4px}
+.sh-item-desc{font-size:12.5px;color:var(--txt3);line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sh-item-meta{font-size:11px;color:var(--txt3);margin-top:6px}
+.sh-item.collapsed{display:none}
+.sh-toggle{display:block;width:100%;padding:12px;background:none;border:none;border-top:1px solid #f0f0f0;color:var(--navy);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+.sh-toggle:hover{background:#fafbff}
+
+/* === MOBILE SHANGHAI COLLAPSE === */
+.sh-collapse-toggle{display:none;background:none;border:none;width:100%;padding:10px 18px;text-align:left;cursor:pointer;font-family:var(--font);font-size:13px;color:var(--sh-blue);font-weight:600;border-top:1px solid #f0f0f0;transition:background .15s}
+.sh-collapse-toggle:hover{background:#fafbff}
+.sh-collapse-toggle::after{content:' ▾';transition:transform .2s}
+.sh-collapse-toggle.collapsed::after{content:' ▸'}
+
+/* === TREND LIST === */
+.trend-list{list-style:none;margin:10px 0 0}
+.trend-list li{font-size:13.5px;color:var(--txt2);line-height:1.7;padding:5px 0;border-bottom:1px dashed #eee;display:flex;gap:8px}
+.trend-list li:last-child{border-bottom:none}
+.trend-n{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;border-radius:3px;flex-shrink:0;margin-top:3px}
+.trend-t{flex:1}.trend-t strong{color:var(--txt)}
+
+/* === FOOTER === */
+.site-footer{background:var(--navy-d);padding:32px 0 24px;margin-top:auto}
+.footer-inner{display:flex;justify-content:space-between;align-items:start;gap:40px}
+.footer-brand{color:rgba(255,255,255,.7);font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:6px}
+.footer-brand span{color:var(--red)}
+.footer-desc{font-size:12px;color:rgba(255,255,255,.35);line-height:1.8;max-width:400px}
+.footer-links{display:flex;flex-direction:column;gap:6px}
+.footer-links a{color:rgba(255,255,255,.4);font-size:12px;text-decoration:none}
+.footer-links a:hover{color:rgba(255,255,255,.7)}
+.footer-copy{text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(255,255,255,.25)}
+
+/* === BILINGUAL SECTION HEADER === */
+.sec-sub{font-size:11px;color:var(--txt3);font-weight:400;letter-spacing:2px;text-transform:uppercase;margin-left:4px}
+
+/* === ARCHIVE PANEL === */
+.archive-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;visibility:hidden;transition:all .3s}
+.archive-overlay.open{opacity:1;visibility:visible}
+.archive-panel{position:fixed;top:0;right:-420px;width:400px;max-width:90vw;height:100vh;background:var(--card);z-index:301;box-shadow:-8px 0 30px rgba(0,0,0,.15);transition:right .35s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
+.archive-panel.open{right:0}
+.archive-panel-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff}
+.archive-panel-title{font-size:18px;font-weight:700;letter-spacing:.5px}
+.archive-panel-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+.archive-panel-close:hover{background:rgba(255,255,255,.1);color:#fff}
+.archive-list{flex:1;overflow-y:auto;padding:12px 0}
+.archive-item{display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;text-decoration:none;color:var(--txt)}
+.archive-item:hover{background:rgba(23,28,97,.03)}
+.archive-item.current{background:rgba(23,28,97,.05);border-left:3px solid var(--navy)}
+.archive-issue{font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;min-width:60px}
+.archive-date{font-size:13px;color:var(--txt2);flex:1}
+.archive-count{font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:10px}
+.archive-empty{padding:40px 24px;text-align:center;color:var(--txt3);font-size:14px}
+nav .archive-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:13px;padding:5px 14px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .2s;font-weight:500}
+nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* === HERO BRAND === */
+.hero-brand{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.hero-logo{width:64px;height:64px;border-radius:14px;background:#fff;padding:4px;box-shadow:0 4px 20px rgba(0,0,0,.15);object-fit:contain}
+.hero-brand-text{display:flex;flex-direction:column;gap:2px}
+.hero-brand-name{color:#fff;font-size:22px;font-weight:700;letter-spacing:1px}
+.hero-brand-slogan{color:rgba(255,255,255,.45);font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:500}
+
+/* === MOBILE SHARE FLOATING BUTTON === */
+.mobile-share-btn{display:none;position:fixed;bottom:32px;left:32px;width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;border:none;cursor:pointer;font-size:18px;align-items:center;justify-content:center;z-index:200;box-shadow:var(--shadow-lg);transition:all .3s}
+.mobile-share-btn:hover{background:var(--navy-l);transform:scale(1.05)}
+
+/* === ANIMATION === */
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.news-list .ncard:nth-child(1){animation-delay:.05s}
+.news-list .ncard:nth-child(2){animation-delay:.12s}
+.news-list .ncard:nth-child(3){animation-delay:.19s}
+
+/* === PRINT STYLES === */
+@media print{
+  .topbar,.topbar-glow,.site-header,.mobile-nav,.filter-bar,.site-footer,
+  .back-top,.mobile-share-btn,.archive-overlay,.archive-panel,
+  .progress-bar,.sh-toggle,.sh-collapse-toggle,.hamburger,.key-points-bar,
+  .hero-deco,.hero-deco2,.share-toast{display:none!important}
+  body{background:#fff!important;color:#000!important;font-size:12pt}
+  .hero{background:#fff!important;padding:20px 0!important;border-bottom:2px solid #171C61}
+  .hero-badge,.hero-title,.hero-desc,.hero-brand-name,.hero-brand-slogan{color:#000!important}
+  .hero-brand-slogan{color:#555!important}
+  .ncard{break-inside:avoid;border:1px solid #ddd!important;box-shadow:none!important;opacity:1!important;transform:none!important;animation:none!important;page-break-inside:avoid}
+  .ncard-persp{background:#f9f9f9!important;border-top:1px solid #ddd!important}
+  .persp-text{color:#555!important}
+  .main .container{display:block!important}
+  .sh-section{position:static!important;break-inside:avoid;page-break-before:always;border:1px solid #ddd!important}
+  .sh-header{background:#171C61!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sh-item.collapsed{display:block!important}
+  .stat-card{box-shadow:none!important;border:1px solid #ddd!important}
+  .stats-grid{grid-template-columns:repeat(4,1fr)!important}
+  a{color:#000!important;text-decoration:none!important}
+  .ncard-source-link{color:#337AB7!important;text-decoration:underline!important}
+}
+
+/* === RESPONSIVE === */
+@media(max-width:900px){
+  .main .container{grid-template-columns:1fr}
+  .sh-section{position:static}
+  nav{display:none}
+  .hamburger{display:flex}
+  .hero-title{font-size:22px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{flex-direction:column;gap:20px;align-items:center;text-align:center}
+  .footer-desc{max-width:100%}
+  .footer-links{align-items:center}
+  .mobile-share-btn{display:flex}
+  .filter-btn{min-height:44px;padding:8px 16px;font-size:13px;display:inline-flex;align-items:center}
+  /* Shanghai collapsible on mobile */
+  .sh-collapse-toggle{display:block}
+  .sh-list.mobile-collapsed{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+  .sh-list.mobile-expanded{max-height:2000px;transition:max-height .5s cubic-bezier(.4,0,.2,1)}
+}
+@media(max-width:480px){
+  .container{padding:0 14px}
+  .ncard-body{padding:14px 16px 12px}
+  .ncard-persp{padding:10px 16px}
+  .stats-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+  .stat-card{min-width:140px;flex-shrink:0;padding:12px 14px;scroll-snap-align:start}
+  .stat-num{font-size:18px}
+  .back-top{bottom:20px;right:20px;width:40px;height:40px;font-size:16px}
+  .mobile-share-btn{bottom:20px;left:20px;width:44px;height:44px;font-size:16px}
+  .filter-btn{min-height:44px;padding:10px 16px}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="share-toast" id="shareToast">链接已复制</div>
+<div class="site-wrapper">
+
+<!-- TOP BAR -->
+<div class="topbar"><div class="container">
+<span>{{DATE}}</span>
+<span>德英乐教育集团 · 内部资讯平台</span>
+</div><div class="topbar-glow"></div></div>
+
+<!-- HEADER -->
+<header class="site-header"><div class="container"><div class="header-inner">
+<div class="logo">
+  <img class="logo-icon" src="data:image/png;base64,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" alt="DTD">
+  <div><div class="logo-text">教育行业<span>资讯</span></div><div class="logo-sub">DTD EDUCATION · INDUSTRY NEWS</div></div>
+</div>
+<nav>
+  <a href="#" class="active" data-nav="all">全部资讯</a>
+  <a href="#s-policy" data-nav="s-policy">政策动态</a>
+  <a href="#s-trend" data-nav="s-trend">行业趋势</a>
+  <a href="#s-intl" data-nav="s-intl">国际教育</a>
+  <a href="#s-insight" data-nav="s-insight">深度观察</a>
+  <a href="#sh-section" class="sh-nav" data-nav="sh-section">上海专栏</a>
+  <button class="archive-btn" onclick="toggleArchive()" title="往期回顾">📚 往期</button>
+  <button class="share-btn" onclick="sharePageURL()" title="分享链接">🔗 分享</button>
+  <button class="dark-toggle" onclick="toggleDark()" title="切换深色模式">🌙</button>
+</nav>
+<button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="菜单">
+  <span></span><span></span><span></span>
+</button>
+</div></div></header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" class="active" data-nav="all">全部资讯</a>
+  <a href="#s-policy" data-nav="s-policy">政策动态</a>
+  <a href="#s-trend" data-nav="s-trend">行业趋势</a>
+  <a href="#s-intl" data-nav="s-intl">国际教育</a>
+  <a href="#s-insight" data-nav="s-insight">深度观察</a>
+  <a href="#sh-section" data-nav="sh-section">上海专栏</a>
+  <a href="javascript:toggleArchive()">📚 往期回顾</a>
+  <a href="javascript:sharePageURL()">🔗 分享链接</a>
+  <a href="javascript:toggleDark()">🌙 切换深色模式</a>
+</div>
+
+<!-- HERO -->
+<div class="hero"><div class="container">
+<div class="hero-deco"></div>
+<div class="hero-deco2"></div>
+<div class="hero-brand">
+<img class="hero-logo" src="data:image/png;base64,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" alt="德英乐教育">
+<div class="hero-brand-text">
+<div class="hero-brand-name">德英乐教育集团</div>
+<div class="hero-brand-slogan">Dare To Dream</div>
+</div>
+</div>
+<div class="hero-badge">每日精选 · 第 {{ISSUE}} 期</div>
+<div class="hero-title">教育行业日报 — {{DATE}}</div>
+<div class="hero-desc">涵盖政策监管、行业趋势、国际教育及深度观察四大板块，重点关注上海双语/国际教育动态。为德英乐教育集团校园长及管理层提供决策参考。</div>
+</div></div>
+
+<!-- STATS BAR -->
+<div class="stats-bar"><div class="container">
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-icon navy-bg">📰</div><div><div class="stat-num">{{NEWS_COUNT}}</div><div class="stat-label">今日资讯</div></div></div>
+  <div class="stat-card"><div class="stat-icon gold-bg">📂</div><div><div class="stat-num">4</div><div class="stat-label">主题板块</div></div></div>
+  <div class="stat-card"><div class="stat-icon blue-bg">📍</div><div><div class="stat-num">{{SH_COUNT}}</div><div class="stat-label">上海专栏</div></div></div>
+  <div class="stat-card"><div class="stat-icon green-bg">🕐</div><div><div class="stat-num">08:00</div><div class="stat-label">今日更新</div></div></div>
+</div>
+</div></div>
+
+<!-- KEY POINTS BAR -->
+<div class="stats-bar" style="margin-top:0;padding-top:0"><div class="container">
+<div class="key-points-bar" id="keyPointsBar">
+  <div class="kp-header">
+    <span style="font-size:15px">📌</span>
+    <span class="kp-label">今日要点</span>
+  </div>
+  <div class="kp-scroll" id="kpScroll">
+    <!-- Populated by JS from first news title per section -->
+  </div>
+</div>
+</div></div>
+
+<!-- MAIN -->
+<div class="main"><div class="container">
+
+<!-- LEFT FEED -->
+<div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">全部</button>
+  <button class="filter-btn" data-filter="t-policy">政策聚焦</button>
+  <button class="filter-btn" data-filter="t-ministry">教育部</button>
+  <button class="filter-btn" data-filter="t-enroll">招生</button>
+  <button class="filter-btn" data-filter="t-compete">竞品</button>
+  <button class="filter-btn" data-filter="t-ai">AI教育</button>
+  <button class="filter-btn" data-filter="t-conf">会议</button>
+  <button class="filter-btn" data-filter="t-lang">语言</button>
+  <button class="filter-btn" data-filter="t-insight">洞察</button>
+  <button class="filter-btn" data-filter="t-trend">趋势</button>
+</div>
+
+{{SECTIONS}}
+
+</div><!-- /left feed -->
+
+<!-- RIGHT: SHANGHAI SPECIAL SECTION -->
+<div class="sh-section" id="sh-section">
+<div class="sh-header">
+<div style="font-size:20px">📍</div>
+<div class="sh-header-text">上海国际教育·双语学校</div>
+<div class="sh-header-sub">专栏</div>
+</div>
+<button class="sh-collapse-toggle" id="shCollapseToggle" onclick="toggleShCollapseM()">展开上海专栏内容</button>
+<div class="sh-list" id="shList">
+
+{{SHANGHAI}}
+
+</div><!-- /sh-list -->
+<button class="sh-toggle" id="shToggle" onclick="toggleShanghai()">展开更多 ▾</button>
+</div><!-- /sh-section -->
+
+</div></div><!-- /main -->
+
+<!-- FOOTER -->
+<footer class="site-footer"><div class="container">
+<div class="footer-inner">
+<div>
+  <div class="footer-brand">德英乐教育<span> · </span>行业资讯平台</div>
+  <div class="footer-desc">本平台内容由公开信息整理，仅供德英乐教育集团内部参考，不构成任何决策建议。未经授权，请勿对外传播。</div>
+</div>
+<div class="footer-links">
+  <a href="https://www.dtd-edu.cn" target="_blank">德英乐教育官网</a>
+  <a href="https://www.vanke.com" target="_blank">万科集团</a>
+</div>
+</div>
+<div class="footer-copy">&copy; 2026 德英乐教育集团 · 品牌与发展部 · DTD Education Group</div>
+</div></footer>
+
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
+
+<!-- MOBILE SHARE FLOATING BUTTON -->
+<button class="mobile-share-btn" id="mobileShareBtn" onclick="mobileShare()" title="分享">🔗</button>
+
+<!-- ARCHIVE PANEL -->
+<div class="archive-overlay" id="archiveOverlay" onclick="toggleArchive()"></div>
+<div class="archive-panel" id="archivePanel">
+<div class="archive-panel-header">
+  <div class="archive-panel-title">📚 往期回顾</div>
+  <button class="archive-panel-close" onclick="toggleArchive()">✕</button>
+</div>
+<div class="archive-list" id="archiveList"></div>
+</div>
+
+<script>
+// === Current Issue Metadata ===
+var CURRENT_ISSUE = {
+  issue: '{{ISSUE}}',
+  date: '{{DATE_ISO}}',
+  dateDisplay: '{{DATE}}',
+  title: '教育行业日报 第{{ISSUE}}期',
+  newsCount: {{NEWS_COUNT}},
+  url: window.location.href
+};
+
+// === Progress Bar ===
+window.addEventListener('scroll',function(){
+  var h=document.documentElement,b=document.body;
+  var st=h.scrollTop||b.scrollTop;
+  var sh=h.scrollHeight||b.scrollHeight;
+  var ch=h.clientHeight;
+  var pct=(st/(sh-ch))*100;
+  document.getElementById('progressBar').style.width=pct+'%';
+  var btn=document.getElementById('backTop');
+  if(st>400)btn.classList.add('visible');else btn.classList.remove('visible');
+});
+
+// === Dark Mode ===
+function toggleDark(){
+  document.documentElement.classList.toggle('dark');
+  var isDark=document.documentElement.classList.contains('dark');
+  localStorage.setItem('dtd-dark',isDark?'1':'0');
+  document.querySelector('.dark-toggle').textContent=isDark?'☀️':'🌙';
+}
+if(localStorage.getItem('dtd-dark')==='1'){
+  document.documentElement.classList.add('dark');
+  document.querySelector('.dark-toggle').textContent='☀️';
+}
+
+// === Mobile Nav with slide animation ===
+function toggleMobileNav(){
+  var nav=document.getElementById('mobileNav');
+  var btn=document.getElementById('hamburgerBtn');
+  var isOpen=nav.classList.contains('open');
+  if(isOpen){
+    nav.style.maxHeight='0';
+    nav.style.padding='0 20px';
+    btn.classList.remove('open');
+    setTimeout(function(){nav.classList.remove('open')},350);
+  }else{
+    nav.classList.add('open');
+    nav.style.display='flex';
+    btn.classList.add('open');
+    // force reflow then animate
+    nav.offsetHeight;
+    nav.style.maxHeight=nav.scrollHeight+'px';
+    nav.style.padding='12px 20px';
+  }
+}
+document.querySelectorAll('.mobile-nav a').forEach(function(a){
+  a.addEventListener('click',function(){
+    var nav=document.getElementById('mobileNav');
+    var btn=document.getElementById('hamburgerBtn');
+    nav.style.maxHeight='0';
+    nav.style.padding='0 20px';
+    btn.classList.remove('open');
+    setTimeout(function(){nav.classList.remove('open')},350);
+  });
+});
+
+// === Shanghai Toggle ===
+var shExpanded=false;
+function toggleShanghai(){
+  shExpanded=!shExpanded;
+  var items=document.querySelectorAll('#shList .sh-item.collapsed');
+  items.forEach(function(el){el.style.display=shExpanded?'block':'none'});
+  document.getElementById('shToggle').textContent=shExpanded?'收起 ▴':'展开更多 ▾';
+}
+
+// === Shanghai Mobile Collapse ===
+var shMobileCollapsed=true;
+function toggleShCollapseM(){
+  var list=document.getElementById('shList');
+  var toggle=document.getElementById('shCollapseToggle');
+  shMobileCollapsed=!shMobileCollapsed;
+  if(shMobileCollapsed){
+    list.classList.remove('mobile-expanded');
+    list.classList.add('mobile-collapsed');
+    toggle.textContent='展开上海专栏内容';
+    toggle.classList.add('collapsed');
+  }else{
+    list.classList.remove('mobile-collapsed');
+    list.classList.add('mobile-expanded');
+    toggle.textContent='收起上海专栏内容';
+    toggle.classList.remove('collapsed');
+  }
+}
+// Initialize mobile collapse state
+(function(){
+  if(window.innerWidth<=900){
+    var list=document.getElementById('shList');
+    if(list){
+      list.classList.add('mobile-collapsed');
+      var toggle=document.getElementById('shCollapseToggle');
+      if(toggle)toggle.classList.add('collapsed');
+    }
+  }
+})();
+
+// === Tag Filter ===
+document.querySelectorAll('.filter-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    var f=btn.getAttribute('data-filter');
+    document.querySelectorAll('.ncard').forEach(function(card){
+      if(f==='all'||card.getAttribute('data-tag')===f){
+        card.style.display='';
+      }else{
+        card.style.display='none';
+      }
+    });
+    document.querySelectorAll('.news-list').forEach(function(list){
+      var visible=list.querySelectorAll('.ncard:not([style*="display: none"])');
+      var head=list.previousElementSibling;
+      // skip dividers
+      while(head&&head.classList&&head.classList.contains('sec-divider')){head=head.previousElementSibling}
+      if(head&&head.classList.contains('sec-head')){
+        head.style.display=visible.length?'':'none';
+      }
+      list.style.display=visible.length?'':'none';
+    });
+  });
+});
+
+// === Scroll Animation (Intersection Observer) ===
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){e.target.style.animationPlayState='running';observer.unobserve(e.target)}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.ncard').forEach(function(card){
+  card.style.animationPlayState='paused';
+  observer.observe(card);
+});
+
+// === Active Nav Highlighting based on scroll (Intersection Observer) ===
+(function(){
+  var sections=document.querySelectorAll('[id^="s-"],#sh-section');
+  if(!sections.length)return;
+  var navLinks=document.querySelectorAll('nav a[data-nav], .mobile-nav a[data-nav]');
+  var currentActive='all';
+  var navObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id=entry.target.getAttribute('id');
+        if(id){
+          currentActive=id;
+          navLinks.forEach(function(link){
+            link.classList.remove('nav-active');
+            if(link.getAttribute('data-nav')===id){
+              link.classList.add('nav-active');
+            }
+          });
+        }
+      }
+    });
+  },{rootMargin:'-80px 0px -60% 0px',threshold:0});
+  sections.forEach(function(sec){navObserver.observe(sec)});
+})();
+
+// === Key Points Bar (populate from first news title per section) ===
+(function(){
+  var scroll=document.getElementById('kpScroll');
+  if(!scroll)return;
+  var sections=document.querySelectorAll('.news-list');
+  var dotColors=['navy','red','blue','green'];
+  var items=[];
+  sections.forEach(function(sec,i){
+    var firstCard=sec.querySelector('.ncard');
+    if(firstCard){
+      var titleEl=firstCard.querySelector('.ncard-title a');
+      if(!titleEl)titleEl=firstCard.querySelector('.ncard-title');
+      if(titleEl){
+        var text=titleEl.textContent.trim();
+        if(text){
+          var color=dotColors[i%dotColors.length];
+          items.push('<div class="kp-item"><span class="kp-dot '+color+'"></span>'+text+'</div>');
+        }
+      }
+    }
+  });
+  if(items.length){
+    scroll.innerHTML=items.join('');
+  }else{
+    document.getElementById('keyPointsBar').style.display='none';
+  }
+})();
+
+// === Share Page URL ===
+function sharePageURL(){
+  var url=window.location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){showShareToast()}).catch(function(){fallbackCopy(url)});
+  }else{
+    fallbackCopy(url);
+  }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text;
+  ta.style.position='fixed';
+  ta.style.left='-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try{document.execCommand('copy');showShareToast()}catch(e){}
+  document.body.removeChild(ta);
+}
+function showShareToast(){
+  var toast=document.getElementById('shareToast');
+  toast.classList.add('show');
+  setTimeout(function(){toast.classList.remove('show')},2000);
+}
+
+// === Mobile Share (navigator.share or fallback) ===
+function mobileShare(){
+  if(navigator.share){
+    navigator.share({
+      title:CURRENT_ISSUE.title,
+      text:'教育行业日报 第'+CURRENT_ISSUE.issue+'期 - '+CURRENT_ISSUE.dateDisplay,
+      url:window.location.href
+    }).catch(function(){});
+  }else{
+    sharePageURL();
+  }
+}
+
+// === Archive System ===
+function getArchive(){
+  try{return JSON.parse(localStorage.getItem('dtd-archive')||'[]')}catch(e){return[]}
+}
+function saveArchive(archive){
+  localStorage.setItem('dtd-archive',JSON.stringify(archive));
+}
+function registerCurrentIssue(){
+  var archive=getArchive();
+  var exists=archive.some(function(item){return item.issue===CURRENT_ISSUE.issue});
+  if(!exists){
+    archive.unshift(CURRENT_ISSUE);
+    if(archive.length>365)archive=archive.slice(0,365);
+    saveArchive(archive);
+  }
+}
+function renderArchive(){
+  var archive=getArchive();
+  var list=document.getElementById('archiveList');
+  if(!archive.length){
+    list.innerHTML='<div class="archive-empty">暂无往期记录<br><span style="font-size:12px;margin-top:8px;display:block">每期日报会自动保存在此</span></div>';
+    return;
+  }
+  var html='';
+  archive.forEach(function(item){
+    var isCurrent=item.issue===CURRENT_ISSUE.issue;
+    html+='<a class="archive-item'+(isCurrent?' current':'')+'" href="'+item.url+'">';
+    html+='<span class="archive-issue">第 '+item.issue+' 期</span>';
+    html+='<span class="archive-date">'+item.dateDisplay+'</span>';
+    html+='<span class="archive-count">'+item.newsCount+' 条</span>';
+    html+='</a>';
+  });
+  list.innerHTML=html;
+}
+function toggleArchive(){
+  var panel=document.getElementById('archivePanel');
+  var overlay=document.getElementById('archiveOverlay');
+  var isOpen=panel.classList.contains('open');
+  if(isOpen){
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }else{
+    renderArchive();
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+}
+// Register current issue on load
+registerCurrentIssue();
+</script>
+</body>
+</html>
