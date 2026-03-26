@@ -15,9 +15,9 @@
   --txt:#333;--txt2:#555;--txt3:#888;--bg:#FAFBFC;--card:#fff;
   --border:#e8e8e8;--radius:10px;
   --font:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif;
-  --shadow-sm:0 1px 3px rgba(0,0,0,.04);
-  --shadow-md:0 4px 16px rgba(0,0,0,.06);
-  --shadow-lg:0 8px 30px rgba(0,0,0,.1);
+  --shadow-sm:0 1px 3px rgba(23,28,97,.04);
+  --shadow-md:0 4px 16px rgba(23,28,97,.07);
+  --shadow-lg:0 8px 30px rgba(23,28,97,.12);
 }
 html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1.7;transition:background .3s,color .3s}
@@ -25,6 +25,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1
 /* === DARK MODE === */
 .dark{--txt:#e0e0e0;--txt2:#aaa;--txt3:#777;--bg:#0d1020;--card:#151c30;--border:#253050}
 .dark .topbar{background:#080c1a}
+.dark .topbar-glow{background:linear-gradient(90deg,var(--red),var(--blue-l),var(--red))}
 .dark .site-header{background:#0a0e28}
 .dark .hero{background:linear-gradient(135deg,#080c1a 0%,#101840 50%,#1a2260 100%)}
 .dark .ncard-persp{background:#1a1530;border-top-color:#253050}
@@ -40,6 +41,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1
 .dark .site-footer{background:#080c1a}
 .dark .trend-list li{border-bottom-color:#253050}
 .dark .dark-toggle{color:var(--red);border-color:rgba(255,53,71,.3)}
+.dark .key-points-bar{background:var(--card);border-color:var(--border)}
+.dark .kp-item{background:rgba(23,28,97,.15);border-color:var(--border);color:var(--txt)}
+.dark .kp-item:hover{background:rgba(23,28,97,.25)}
+.dark .sec-head{background:rgba(255,255,255,.03)}
+.dark .sec-divider{border-color:#253050}
+.dark .share-toast{background:#1a2240;color:var(--txt)}
+.dark .mobile-share-btn{background:var(--navy-l)}
 
 /* === PROGRESS BAR === */
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),var(--blue-l));z-index:999;width:0;transition:width .1s}
@@ -54,8 +62,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
 
 /* === TOPBAR === */
-.topbar{background:var(--navy-d);padding:6px 0;font-size:12px;color:rgba(255,255,255,.5)}
+.topbar{background:var(--navy-d);padding:6px 0;font-size:12px;color:rgba(255,255,255,.5);position:relative}
 .topbar .container{display:flex;justify-content:space-between;align-items:center}
+.topbar-glow{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--navy),var(--red),var(--blue-l),var(--red),var(--navy));background-size:200% 100%;animation:topbarGlow 4s linear infinite}
+@keyframes topbarGlow{0%{background-position:0% 0}100%{background-position:200% 0}}
 
 /* === HEADER === */
 .site-header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
@@ -70,16 +80,31 @@ nav a{color:rgba(255,255,255,.7);font-size:14px;padding:6px 14px;border-radius:6
 nav a:hover,nav a.active{color:#fff;background:rgba(255,255,255,.1)}
 nav a.sh-nav{color:var(--red);border:1px solid rgba(255,53,71,.3)}
 nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
+nav a.nav-active{color:#fff;background:rgba(255,255,255,.15)}
 .dark-toggle{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);cursor:pointer;padding:5px 10px;border-radius:20px;font-size:13px;margin-left:8px;transition:all .2s}
 .dark-toggle:hover{background:rgba(255,255,255,.1);color:#fff}
 
+/* === SHARE BUTTON (HEADER) === */
+.share-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);cursor:pointer;padding:5px 10px;border-radius:20px;font-size:13px;margin-left:4px;transition:all .2s;font-family:var(--font)}
+.share-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* === SHARE TOAST === */
+.share-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--card);color:var(--txt);padding:10px 24px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);font-size:14px;font-weight:600;z-index:500;opacity:0;transition:all .3s;pointer-events:none;border:1px solid var(--border)}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* === HAMBURGER === */
-.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:4px}
-.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
-.mobile-nav{display:none;background:var(--navy-d);padding:12px 20px;flex-direction:column;gap:2px}
-.mobile-nav a{color:rgba(255,255,255,.7);font-size:14px;padding:10px 14px;border-radius:6px;display:block;text-decoration:none}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:4px;width:40px;height:40px;align-items:center;justify-content:center;position:relative}
+.hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s;position:absolute}
+.hamburger span:nth-child(1){transform:translateY(-7px)}
+.hamburger span:nth-child(2){transform:translateY(0)}
+.hamburger span:nth-child(3){transform:translateY(7px)}
+.hamburger.open span:nth-child(1){transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg)}
+.mobile-nav{display:none;background:var(--navy-d);padding:0 20px;flex-direction:column;gap:2px;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),padding .35s cubic-bezier(.4,0,.2,1)}
+.mobile-nav a{color:rgba(255,255,255,.7);font-size:14px;padding:10px 14px;border-radius:6px;display:block;text-decoration:none;min-height:44px;display:flex;align-items:center}
 .mobile-nav a:hover,.mobile-nav a.active{color:#fff;background:rgba(255,255,255,.08)}
-.mobile-nav.open{display:flex}
+.mobile-nav.open{display:flex;max-height:500px;padding:12px 20px}
 
 /* === HERO === */
 .hero{background:linear-gradient(135deg,var(--navy) 0%,#1a2070 50%,var(--navy-l) 100%);padding:40px 0 36px;position:relative;overflow:hidden}
@@ -98,12 +123,25 @@ nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
 .stat-card{background:var(--card);border-radius:var(--radius);padding:16px 20px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s}
 .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.stat-icon.navy-bg{background:rgba(23,28,97,.08);color:var(--navy)}
-.stat-icon.gold-bg{background:rgba(255,53,71,.08);color:var(--red)}
-.stat-icon.blue-bg{background:rgba(30,131,240,.08);color:var(--sh-blue)}
-.stat-icon.green-bg{background:rgba(16,185,129,.08);color:#10b981}
+.stat-icon.navy-bg{background:linear-gradient(135deg,rgba(23,28,97,.1),rgba(23,28,97,.05));color:var(--navy)}
+.stat-icon.gold-bg{background:linear-gradient(135deg,rgba(255,53,71,.1),rgba(255,53,71,.05));color:var(--red)}
+.stat-icon.blue-bg{background:linear-gradient(135deg,rgba(30,131,240,.1),rgba(30,131,240,.05));color:var(--sh-blue)}
+.stat-icon.green-bg{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.05));color:#10b981}
 .stat-num{font-size:22px;font-weight:700;color:var(--txt);line-height:1.2}
 .stat-label{font-size:12px;color:var(--txt3);margin-top:2px}
+
+/* === KEY POINTS BAR === */
+.key-points-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:4px;box-shadow:var(--shadow-sm)}
+.kp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.kp-label{font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.5px;white-space:nowrap}
+.kp-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.kp-scroll::-webkit-scrollbar{height:3px}
+.kp-scroll::-webkit-scrollbar-track{background:transparent}
+.kp-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.kp-item{flex-shrink:0;max-width:280px;background:rgba(23,28,97,.04);border:1px solid rgba(23,28,97,.08);border-radius:6px;padding:6px 14px;font-size:12.5px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .2s;cursor:default}
+.kp-item:hover{background:rgba(23,28,97,.08);color:var(--txt)}
+.kp-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;flex-shrink:0}
+.kp-dot.navy{background:var(--navy)}.kp-dot.red{background:var(--red)}.kp-dot.blue{background:var(--sh-blue)}.kp-dot.green{background:#10b981}
 
 /* === FILTER BAR === */
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;padding:16px 0;border-bottom:1px solid var(--border)}
@@ -116,15 +154,19 @@ nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
 .main .container{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
 
 /* === SECTION HEAD === */
-.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:10px 14px;border-radius:8px;background:rgba(23,28,97,.02)}
 .sec-icon{width:6px;height:22px;border-radius:3px;flex-shrink:0}
 .sec-icon.navy{background:var(--navy)}.sec-icon.gold{background:var(--red)}.sec-icon.blue{background:var(--sh-blue)}
 .sec-title{font-size:18px;font-weight:700;color:var(--txt)}
 .sec-line{flex:1;height:1px;background:var(--border)}
 
+/* === SECTION DIVIDER === */
+.sec-divider{border:none;border-top:1px dashed var(--border);margin:12px 0 28px;position:relative}
+.sec-divider::after{content:'';display:block;width:40px;height:3px;background:linear-gradient(90deg,var(--navy),var(--red));border-radius:2px;margin:0 auto;position:relative;top:-2px}
+
 /* === NEWS CARDS === */
 .news-list{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
-.ncard{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;transition:box-shadow .3s,transform .2s;opacity:0;transform:translateY(16px);animation:fadeUp .5s ease forwards}
+.ncard{background:var(--card);border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);overflow:hidden;transition:box-shadow .3s,transform .2s;opacity:0;transform:translateY(16px);animation:fadeUp .5s ease forwards;border-left:2px solid transparent}
 .ncard:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .ncard-body{padding:18px 20px 14px}
 .ncard-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:3px;margin-bottom:8px;letter-spacing:.3px;cursor:pointer;transition:opacity .2s}
@@ -139,6 +181,19 @@ nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
 .t-sh{background:#eff6ff;color:#2563eb}
 .t-trend{background:#f0fdf4;color:#16a34a}
 .t-ai{background:#fef3c7;color:#b45309}
+
+/* Tag-based left borders for cards */
+.ncard[data-tag="t-policy"]{border-left-color:#4a6fa5}
+.ncard[data-tag="t-ministry"]{border-left-color:#c4702a}
+.ncard[data-tag="t-enroll"]{border-left-color:#3d7a3d}
+.ncard[data-tag="t-compete"]{border-left-color:#c44a55}
+.ncard[data-tag="t-conf"]{border-left-color:#6a5acd}
+.ncard[data-tag="t-lang"]{border-left-color:#4a7a9a}
+.ncard[data-tag="t-insight"]{border-left-color:#7a5a8a}
+.ncard[data-tag="t-sh"]{border-left-color:#2563eb}
+.ncard[data-tag="t-trend"]{border-left-color:#16a34a}
+.ncard[data-tag="t-ai"]{border-left-color:#b45309}
+
 .ncard-title{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:8px}
 .ncard-title a{color:var(--txt);text-decoration:none;transition:color .2s}
 .ncard-title a:hover{color:var(--navy)}
@@ -154,7 +209,7 @@ nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
 .ncard.featured .ncard-title{font-size:17px}
 
 /* Perspective */
-.ncard-persp{background:#fff5f6;border-top:1px solid #fde0e3;padding:12px 20px}
+.ncard-persp{background:linear-gradient(135deg,#fff5f6 0%,#fff0f2 50%,#fff5f8 100%);border-top:1px solid #fde0e3;padding:12px 20px}
 .persp-label{font-size:11px;font-weight:700;color:var(--red);letter-spacing:.5px;margin-bottom:4px}
 .persp-label::before{content:'\25C6 '}
 .persp-text{font-size:13px;color:#8a3040;line-height:1.8}
@@ -175,6 +230,12 @@ nav a.sh-nav:hover{background:rgba(255,53,71,.1);color:var(--red)}
 .sh-item.collapsed{display:none}
 .sh-toggle{display:block;width:100%;padding:12px;background:none;border:none;border-top:1px solid #f0f0f0;color:var(--navy);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
 .sh-toggle:hover{background:#fafbff}
+
+/* === MOBILE SHANGHAI COLLAPSE === */
+.sh-collapse-toggle{display:none;background:none;border:none;width:100%;padding:10px 18px;text-align:left;cursor:pointer;font-family:var(--font);font-size:13px;color:var(--sh-blue);font-weight:600;border-top:1px solid #f0f0f0;transition:background .15s}
+.sh-collapse-toggle:hover{background:#fafbff}
+.sh-collapse-toggle::after{content:' ▾';transition:transform .2s}
+.sh-collapse-toggle.collapsed::after{content:' ▸'}
 
 /* === TREND LIST === */
 .trend-list{list-style:none;margin:10px 0 0}
@@ -224,11 +285,38 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 .hero-brand-name{color:#fff;font-size:22px;font-weight:700;letter-spacing:1px}
 .hero-brand-slogan{color:rgba(255,255,255,.45);font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:500}
 
+/* === MOBILE SHARE FLOATING BUTTON === */
+.mobile-share-btn{display:none;position:fixed;bottom:32px;left:32px;width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;border:none;cursor:pointer;font-size:18px;align-items:center;justify-content:center;z-index:200;box-shadow:var(--shadow-lg);transition:all .3s}
+.mobile-share-btn:hover{background:var(--navy-l);transform:scale(1.05)}
+
 /* === ANIMATION === */
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 .news-list .ncard:nth-child(1){animation-delay:.05s}
 .news-list .ncard:nth-child(2){animation-delay:.12s}
 .news-list .ncard:nth-child(3){animation-delay:.19s}
+
+/* === PRINT STYLES === */
+@media print{
+  .topbar,.topbar-glow,.site-header,.mobile-nav,.filter-bar,.site-footer,
+  .back-top,.mobile-share-btn,.archive-overlay,.archive-panel,
+  .progress-bar,.sh-toggle,.sh-collapse-toggle,.hamburger,.key-points-bar,
+  .hero-deco,.hero-deco2,.share-toast{display:none!important}
+  body{background:#fff!important;color:#000!important;font-size:12pt}
+  .hero{background:#fff!important;padding:20px 0!important;border-bottom:2px solid #171C61}
+  .hero-badge,.hero-title,.hero-desc,.hero-brand-name,.hero-brand-slogan{color:#000!important}
+  .hero-brand-slogan{color:#555!important}
+  .ncard{break-inside:avoid;border:1px solid #ddd!important;box-shadow:none!important;opacity:1!important;transform:none!important;animation:none!important;page-break-inside:avoid}
+  .ncard-persp{background:#f9f9f9!important;border-top:1px solid #ddd!important}
+  .persp-text{color:#555!important}
+  .main .container{display:block!important}
+  .sh-section{position:static!important;break-inside:avoid;page-break-before:always;border:1px solid #ddd!important}
+  .sh-header{background:#171C61!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sh-item.collapsed{display:block!important}
+  .stat-card{box-shadow:none!important;border:1px solid #ddd!important}
+  .stats-grid{grid-template-columns:repeat(4,1fr)!important}
+  a{color:#000!important;text-decoration:none!important}
+  .ncard-source-link{color:#337AB7!important;text-decoration:underline!important}
+}
 
 /* === RESPONSIVE === */
 @media(max-width:900px){
@@ -238,28 +326,39 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
   .hamburger{display:flex}
   .hero-title{font-size:22px}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .footer-inner{flex-direction:column;gap:20px}
+  .footer-inner{flex-direction:column;gap:20px;align-items:center;text-align:center}
+  .footer-desc{max-width:100%}
+  .footer-links{align-items:center}
+  .mobile-share-btn{display:flex}
+  .filter-btn{min-height:44px;padding:8px 16px;font-size:13px;display:inline-flex;align-items:center}
+  /* Shanghai collapsible on mobile */
+  .sh-collapse-toggle{display:block}
+  .sh-list.mobile-collapsed{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+  .sh-list.mobile-expanded{max-height:2000px;transition:max-height .5s cubic-bezier(.4,0,.2,1)}
 }
 @media(max-width:480px){
   .container{padding:0 14px}
   .ncard-body{padding:14px 16px 12px}
   .ncard-persp{padding:10px 16px}
-  .stats-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .stat-card{padding:12px 14px}
+  .stats-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+  .stat-card{min-width:140px;flex-shrink:0;padding:12px 14px;scroll-snap-align:start}
   .stat-num{font-size:18px}
   .back-top{bottom:20px;right:20px;width:40px;height:40px;font-size:16px}
+  .mobile-share-btn{bottom:20px;left:20px;width:44px;height:44px;font-size:16px}
+  .filter-btn{min-height:44px;padding:10px 16px}
 }
 </style>
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
+<div class="share-toast" id="shareToast">链接已复制</div>
 <div class="site-wrapper">
 
 <!-- TOP BAR -->
 <div class="topbar"><div class="container">
-<span>2026年03月24日 星期二</span>
+<span>2026年03月26日 星期四</span>
 <span>德英乐教育集团 · 内部资讯平台</span>
-</div></div>
+</div><div class="topbar-glow"></div></div>
 
 <!-- HEADER -->
 <header class="site-header"><div class="container"><div class="header-inner">
@@ -268,29 +367,31 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
   <div><div class="logo-text">教育行业<span>资讯</span></div><div class="logo-sub">DTD EDUCATION · INDUSTRY NEWS</div></div>
 </div>
 <nav>
-  <a href="#" class="active">全部资讯</a>
-  <a href="#s-policy">政策动态</a>
-  <a href="#s-trend">行业趋势</a>
-  <a href="#s-intl">国际教育</a>
-  <a href="#s-insight">深度观察</a>
-  <a href="#sh-section" class="sh-nav">上海专栏</a>
+  <a href="#" class="active" data-nav="all">全部资讯</a>
+  <a href="#s-policy" data-nav="s-policy">政策动态</a>
+  <a href="#s-trend" data-nav="s-trend">行业趋势</a>
+  <a href="#s-intl" data-nav="s-intl">国际教育</a>
+  <a href="#s-insight" data-nav="s-insight">深度观察</a>
+  <a href="#sh-section" class="sh-nav" data-nav="sh-section">上海专栏</a>
   <button class="archive-btn" onclick="toggleArchive()" title="往期回顾">📚 往期</button>
+  <button class="share-btn" onclick="sharePageURL()" title="分享链接">🔗 分享</button>
   <button class="dark-toggle" onclick="toggleDark()" title="切换深色模式">🌙</button>
 </nav>
-<button class="hamburger" onclick="toggleMobileNav()" aria-label="菜单">
+<button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="菜单">
   <span></span><span></span><span></span>
 </button>
 </div></div></header>
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
-  <a href="#" class="active">全部资讯</a>
-  <a href="#s-policy">政策动态</a>
-  <a href="#s-trend">行业趋势</a>
-  <a href="#s-intl">国际教育</a>
-  <a href="#s-insight">深度观察</a>
-  <a href="#sh-section">上海专栏</a>
+  <a href="#" class="active" data-nav="all">全部资讯</a>
+  <a href="#s-policy" data-nav="s-policy">政策动态</a>
+  <a href="#s-trend" data-nav="s-trend">行业趋势</a>
+  <a href="#s-intl" data-nav="s-intl">国际教育</a>
+  <a href="#s-insight" data-nav="s-insight">深度观察</a>
+  <a href="#sh-section" data-nav="sh-section">上海专栏</a>
   <a href="javascript:toggleArchive()">📚 往期回顾</a>
+  <a href="javascript:sharePageURL()">🔗 分享链接</a>
   <a href="javascript:toggleDark()">🌙 切换深色模式</a>
 </div>
 
@@ -305,18 +406,31 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 <div class="hero-brand-slogan">Dare To Dream</div>
 </div>
 </div>
-<div class="hero-badge">每日精选 · 第 005 期</div>
-<div class="hero-title">教育行业日报 — 2026年03月24日 星期二</div>
+<div class="hero-badge">每日精选 · 第 007 期</div>
+<div class="hero-title">教育行业日报 — 2026年03月26日 星期四</div>
 <div class="hero-desc">涵盖政策监管、行业趋势、国际教育及深度观察四大板块，重点关注上海双语/国际教育动态。为德英乐教育集团校园长及管理层提供决策参考。</div>
 </div></div>
 
 <!-- STATS BAR -->
 <div class="stats-bar"><div class="container">
 <div class="stats-grid">
-  <div class="stat-card"><div class="stat-icon navy-bg">📰</div><div><div class="stat-num">10</div><div class="stat-label">今日资讯</div></div></div>
+  <div class="stat-card"><div class="stat-icon navy-bg">📰</div><div><div class="stat-num">8</div><div class="stat-label">今日资讯</div></div></div>
   <div class="stat-card"><div class="stat-icon gold-bg">📂</div><div><div class="stat-num">4</div><div class="stat-label">主题板块</div></div></div>
-  <div class="stat-card"><div class="stat-icon blue-bg">📍</div><div><div class="stat-num">8</div><div class="stat-label">上海专栏</div></div></div>
+  <div class="stat-card"><div class="stat-icon blue-bg">📍</div><div><div class="stat-num">7</div><div class="stat-label">上海专栏</div></div></div>
   <div class="stat-card"><div class="stat-icon green-bg">🕐</div><div><div class="stat-num">08:00</div><div class="stat-label">今日更新</div></div></div>
+</div>
+</div></div>
+
+<!-- KEY POINTS BAR -->
+<div class="stats-bar" style="margin-top:0;padding-top:0"><div class="container">
+<div class="key-points-bar" id="keyPointsBar">
+  <div class="kp-header">
+    <span style="font-size:15px">📌</span>
+    <span class="kp-label">今日要点</span>
+  </div>
+  <div class="kp-scroll" id="kpScroll">
+    <!-- Populated by JS from first news title per section -->
+  </div>
 </div>
 </div></div>
 
@@ -344,112 +458,92 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 <div class="news-list">
 <div class="ncard featured" data-tag="t-policy">
 <div class="ncard-body">
-<div class="ncard-tag t-policy">政策纲领</div>
-<div class="ncard-title"><a href="http://www.moe.gov.cn/" target="_blank" rel="noopener">中共中央、国务院印发《教育强国建设规划纲要（2024—2035年）》</a></div>
-<div class="ncard-summary">中共中央、国务院印发《教育强国建设规划纲要（2024—2035年）》，旨在加快建设中国特色社会主义教育强国。文件明确了未来十余年教育发展的战略方向、重点任务和实施路径，是指导我国教育现代化发展的纲领性文件。教育部负责人就文件内容进行了解读，强调其政治属性、人民属性和战略属性。</div>
-<div class="ncard-meta"><span>来源：www.moe.gov.cn</span><span>2026-03-24</span><a class="ncard-source-link" href="http://www.moe.gov.cn/" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-policy">民办教育政策</div>
+<div class="ncard-title"><a href="https://ailegal.baidu.com/legalarticle/qadetail?id=08db765fe3315c250308" target="_blank" rel="noopener">国家对待民办学校的最新政策</a></div>
+<div class="ncard-summary">国家最新政策旨在促进民办学校健康、有序发展，明确区分营利性与非营利性学校，并提供差异化支持。政策涵盖鼓励社会力量办学、提供资金与税收优惠、规范设立与审批条件（如师资、资金要求）等方面，为行业提供了更清晰的制度框架。</div>
+<div class="ncard-meta"><span>来源：ailegal.baidu.com</span><span>2026-03-26</span><a class="ncard-source-link" href="https://ailegal.baidu.com/legalarticle/qadetail?id=08db765fe3315c250308" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">作为K-12双语教育集团，德英乐需深入研读《纲要》，将国家战略与学校发展相结合，在坚持立德树人的基础上，持续优化双语课程体系，为培养具有全球竞争力的未来人才贡献力量。</div></div>
+<div class="persp-text">德英乐作为民办双语教育集团，需密切关注政策导向，确保办学合规，并积极利用政策支持，优化办学结构与资源配置，实现可持续发展。</div></div>
 </div>
-<div class="ncard" data-tag="t-enroll">
+<div class="ncard" data-tag="t-policy">
 <div class="ncard-body">
-<div class="ncard-tag t-enroll">招生监管</div>
-<div class="ncard-title"><a href="http://www.moe.gov.cn/jyb_xwfb/gzdt_gzdt/s5987/202503/t20250327_1185000.html" target="_blank" rel="noopener">教育部部署开展2025年义务教育阳光招生专项行动</a></div>
-<div class="ncard-summary">教育部办公厅发布通知，部署2025年义务教育阳光招生专项行动。通知提出七项重点任务，包括严格规范民办学校招生行为，对民办学校开展全面排查，对有停办风险的学校提前预警并做好学生安置预案。同时，强调加强流动儿童入学保障，全面落实以居住证为主要依据的随迁子女义务教育入学政策。</div>
-<div class="ncard-meta"><span>来源：www.moe.gov.cn</span><span>2025-03-27</span><a class="ncard-source-link" href="http://www.moe.gov.cn/jyb_xwfb/gzdt_gzdt/s5987/202503/t20250327_1185000.html" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-policy">公办民办规范</div>
+<div class="ncard-title"><a href="http://scpc.gov.cn/ztzl/jczwgk/gkly/ywjy/xzqr/ywjyxxslsp/13959511.html" target="_blank" rel="noopener">教育部等八部门关于规范公办学校举办或者参与举办民办义务教育学校的通知</a></div>
+<div class="ncard-summary">教育部等八部门联合发布通知，旨在规范公办学校举办或参与举办民办义务教育学校的行为。此举意在厘清公办与民办教育边界，防止“公参民”模式带来的不公平竞争与资源混淆，推动义务教育阶段更加公平、规范发展。</div>
+<div class="ncard-meta"><span>来源：平昌县人民政府</span><span>2025-07-01</span><a class="ncard-source-link" href="http://scpc.gov.cn/ztzl/jczwgk/gkly/ywjy/xzqr/ywjyxxslsp/13959511.html" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">德英乐旗下学校需严格遵守招生规范，确保招生过程公开、公平、公正。同时，应关注政策对民办学校风险排查的要求，持续提升办学质量与稳定性，保障每一位在读学生的教育权益。</div></div>
+<div class="persp-text">德英乐作为独立运营的民办教育集团，此政策有助于净化市场环境，凸显我们独立、规范的办学优势。我们需持续强化自身品牌与教学质量，在规范市场中建立核心竞争力。</div></div>
 </div>
-<div class="ncard" data-tag="t-ministry">
+<div class="ncard" data-tag="t-trend">
 <div class="ncard-body">
-<div class="ncard-tag t-ministry">年度重点</div>
-<div class="ncard-title"><a href="https://news.cctv.cn/2026/01/09/ARTIaylKsku88riwquYxJksc260109.shtml" target="_blank" rel="noopener">2026年全国教育工作会议部署年度重点任务</a></div>
-<div class="ncard-summary">2026年全国教育工作会议在京召开，部署年度教育工作重点。会议强调2026年是“十五五”开局之年，也是教育强国建设三年行动计划承上启下的关键之年。重点任务包括深入落实立德树人根本任务，强化社会实践课程，迭代升级数字时代网络育人新课堂，推进自主知识体系与原创性教材建设，促进学生身心健康全面发展。</div>
-<div class="ncard-meta"><span>来源：news.cctv.cn</span><span>2026-01-09</span><a class="ncard-source-link" href="https://news.cctv.cn/2026/01/09/ARTIaylKsku88riwquYxJksc260109.shtml" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-trend">教育改革信号</div>
+<div class="ncard-title"><a href="https://edu.cctv.com/2026/01/26/ARTI3YXjIEzYVIWPIe85V1dL260126.shtml" target="_blank" rel="noopener">2026，教育改革释放哪些信号？</a></div>
+<div class="ncard-summary">2026年是“十五五”规划开局之年，也是教育强国建设三年行动计划的关键之年。全国教育工作会议部署了年度重点任务，释放出应对学龄人口变化、深化教育评价改革、推动教育数字化与科技赋能等新信号，强调教育的高质量与适应性发展。</div>
+<div class="ncard-meta"><span>来源：央视网</span><span>2026-01-26</span><a class="ncard-source-link" href="https://edu.cctv.com/2026/01/26/ARTI3YXjIEzYVIWPIe85V1dL260126.shtml" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">德英乐应积极响应会议号召，在双语教学框架内，加强社会实践与网络育人课堂建设，同时关注学生身心健康，将“全面发展”的理念融入教育教学全过程，打造高质量的教育生态。</div></div>
+<div class="persp-text">德英乐需紧跟国家教育改革步伐，特别是在应对人口结构变化、深化双语与国际化特色、以及探索科技与教育融合方面，提前布局，保持教育理念与实践的先进性。</div></div>
 </div>
 </div>
 <div class="sec-head" id="s-trend"><div class="sec-icon gold"></div><div class="sec-title">行业趋势与市场</div><div class="sec-line"></div></div>
 <div class="news-list">
-<div class="ncard featured" data-tag="t-ai">
+<div class="ncard featured" data-tag="t-trend">
 <div class="ncard-body">
-<div class="ncard-tag t-ai">AI+教育</div>
-<div class="ncard-title"><a href="https://zhuanlan.zhihu.com/p/1944714725301650580" target="_blank" rel="noopener">AI教育行业深度报告：全球市场高速增长，个性化学习成核心</a></div>
-<div class="ncard-summary">报告指出，受益于个性化学习体验需求的增长，AI正在深刻变革全球教育行业，行业增速有望达到30%以上。基于大模型的个性化辅导（如AI私人导师、定制化学习路径）、教学效率工具等成为主要应用方向。全球AI教育市场规模预计将从数亿美元增长至2034年的百亿美元级别。</div>
-<div class="ncard-meta"><span>来源：zhuanlan.zhihu.com</span><span>2026-03-24</span><a class="ncard-source-link" href="https://zhuanlan.zhihu.com/p/1944714725301650580" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-trend">教育科技趋势</div>
+<div class="ncard-title"><a href="https://www.huaon.com/channel/trend/1061813.html" target="_blank" rel="noopener">2025年中国教育科技行业市场规模、相关政策梳理、产业链上下游及发展趋势分析「图」</a></div>
+<div class="ncard-summary">报告显示，中国教育科技（EdTech）行业通过融合AI、大数据、云计算等技术，正推动教学、学习、评估与管理各环节的革新。行业市场规模持续增长，政策支持明确，产业链日趋完善，未来发展趋势聚焦于个性化学习、智能化教学工具及教育管理效率提升。</div>
+<div class="ncard-meta"><span>来源：华经情报网</span><span>2025-12-30</span><a class="ncard-source-link" href="https://www.huaon.com/channel/trend/1061813.html" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">德英乐应积极探索“AI+双语教育”的融合应用，例如引入AI辅助语言学习、个性化学习路径规划等工具，提升教学效率与学生学习体验，保持教育技术的领先性。</div></div>
+<div class="persp-text">德英乐应积极评估并引入合适的教育科技工具，赋能双语教学与个性化学习，提升教学效率与学生体验，同时探索AI在课程辅助、学生评估等方面的应用场景。</div></div>
 </div>
-<div class="ncard" data-tag="t-trend">
+<div class="ncard" data-tag="t-insight">
 <div class="ncard-body">
-<div class="ncard-tag t-trend">投资策略</div>
-<div class="ncard-title"><a href="https://reportify.cn/reports/1199782959255785472" target="_blank" rel="noopener">教育行业2026年度投资策略："三维共振"与"AI+教育"新空间</a></div>
-<div class="ncard-summary">分析认为，教育行业正迎来政策边际改善、行业供给出清、需求释放的“三维共振”，投资逻辑转向业绩驱动。“AI+教育”是核心发展新趋势与投资主线，有望为行业龙头打开新的成长空间，推动业绩与估值提升。</div>
-<div class="ncard-meta"><span>来源：reportify.cn</span><span>2026-03-24</span><a class="ncard-source-link" href="https://reportify.cn/reports/1199782959255785472" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-insight">行业影响</div>
+<div class="ncard-title"><a href="https://wiki.jrxuqcr.com/archives/209375.html" target="_blank" rel="noopener">张雪峰逝世引发教育行业反思</a></div>
+<div class="ncard-summary">知名教育从业者张雪峰老师于2026年3月24日逝世，其生前在高考、考研志愿填报领域的深远影响被广泛讨论。这一事件引发了公众及行业对教育咨询角色、生涯规划重要性以及教育从业者社会责任与压力的重新审视。</div>
+<div class="ncard-meta"><span>来源：wiki.jrxuqcr.com</span><span>2026-03-25</span><a class="ncard-source-link" href="https://wiki.jrxuqcr.com/archives/209375.html" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">在行业结构优化和AI赋能的双重机遇下，德英乐需巩固其在上海K-12双语教育市场的龙头地位，通过精细化运营和科技赋能提升教育服务质量，实现可持续的业绩增长。</div></div>
-</div>
-<div class="ncard" data-tag="t-trend">
-<div class="ncard-body">
-<div class="ncard-tag t-trend">行业转型</div>
-<div class="ncard-title"><a href="https://m.36kr.com/p/3638025138490500" target="_blank" rel="noopener">政策清晰、AI平权，2026年教育行业新机会</a></div>
-<div class="ncard-summary">文章指出，2025年后教育培训行业格局逐步清晰稳定。监管逻辑完成底层切换，AI技术实现全面渗透，资本市场经历结构性重塑。2026年，在政策明晰和AI技术普及（平权）的背景下，教育行业将涌现出新的发展机会，关键在于如何合规、有效地利用技术满足多元化教育需求。</div>
-<div class="ncard-meta"><span>来源：m.36kr.com</span><span>2026-03-24</span><a class="ncard-source-link" href="https://m.36kr.com/p/3638025138490500" target="_blank" rel="noopener">阅读原文 →</a></div>
-</div>
-<div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">德英乐应把握政策稳定期和AI普及化的窗口，聚焦自身双语教育核心优势，探索合规创新的教育服务模式，利用技术赋能教学与管理，在新时代竞争中确立差异化优势。</div></div>
+<div class="persp-text">此事提醒教育机构需关注教师的职业健康与压力管理。同时，德英乐在提供国际化升学指导时，应更注重科学性、个性化与长远生涯规划，避免过度焦虑营销，回归教育本质。</div></div>
 </div>
 </div>
 <div class="sec-head" id="s-intl"><div class="sec-icon navy"></div><div class="sec-title">国际教育视野</div><div class="sec-line"></div></div>
 <div class="news-list">
 <div class="ncard featured" data-tag="t-lang">
 <div class="ncard-body">
-<div class="ncard-tag t-lang">国际课程</div>
-<div class="ncard-title"><a href="https://www.cambridgeinternational.org/languages/chinese/Images/518141-university-recognition-worldwide.pdf" target="_blank" rel="noopener">剑桥A-Level课程全球大学认可度持续提升</a></div>
-<div class="ncard-summary">剑桥国际考试局发布的认可手册显示，包括日本名古屋大学在内的全球众多顶尖大学，均欢迎完成剑桥A-Level课程的学生申请其英语授课的国际课程项目。这进一步印证了A-Level课程作为主流国际课程之一的全球通行性和学术认可度，为选择该路径的学生提供了广泛的升学选择。</div>
-<div class="ncard-meta"><span>来源：www.cambridgeinternational.org</span><span>2026-03-24</span><a class="ncard-source-link" href="https://www.cambridgeinternational.org/languages/chinese/Images/518141-university-recognition-worldwide.pdf" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-lang">课程体系对比</div>
+<div class="ncard-title"><a href="https://www.inteducom.com/posts/2217" target="_blank" rel="noopener">一文讲清 IB / AP / A-Level：三大国际课程体系对比</a></div>
+<div class="ncard-summary">文章深入对比了IB、AP、A-Level三大主流国际课程体系的核心差异。IB强调全人培养与探究精神，AP侧重大学先修知识的深度，A-Level则以结构分明、专业深度见长。选择需基于学生特质、学术优势及目标留学国家，而非盲目追求“最难”或“最热”。</div>
+<div class="ncard-meta"><span>来源：IntEDU国际教育社区</span><span>2026-03-26</span><a class="ncard-source-link" href="https://www.inteducom.com/posts/2217" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">德英乐高中部聚焦海外升学，提供A-Level等国际课程。此新闻印证了我们课程体系的全球竞争力。集团应持续强化与全球知名大学的联系，为学生升学提供更精准的指导与更广阔的通道。</div></div>
+<div class="persp-text">德英乐高中部聚焦海外升学，已获IB等认证。我们应持续深化对主流课程体系的理解，为学生提供精准的课程选择与升学规划指导，发挥我校在IB等课程上的教学优势，助力学生个性化成长。</div></div>
 </div>
 <div class="ncard" data-tag="t-lang">
 <div class="ncard-body">
-<div class="ncard-tag t-lang">双语教学研究</div>
-<div class="ncard-title"><a href="https://www.researchgate.net/publication/381380131_Teacher_Perspectives_on_Breakout_Rooms_in_Online_Education_in_a_K-12_Bilingual_School_in_China" target="_blank" rel="noopener">研究探讨中国K-12双语学校在线教育中的分组讨论室应用</a></div>
-<div class="ncard-summary">一项学术研究以中国一所K-12双语学校为案例，探讨了教师在在线教育中对分组讨论室（Breakout Rooms）应用的看法。研究指出，中国的双语学校通常致力于融合国际与中国文化，为学生提供独特的学习体验。在线教学工具的有效运用，是保障这种融合教育质量的重要环节。</div>
-<div class="ncard-meta"><span>来源：www.researchgate.net</span><span>2026-03-24</span><a class="ncard-source-link" href="https://www.researchgate.net/publication/381380131_Teacher_Perspectives_on_Breakout_Rooms_in_Online_Education_in_a_K-12_Bilingual_School_in_China" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-lang">双语学校定位</div>
+<div class="ncard-title"><a href="https://blog.alifaedtech.com/bilingual-private-schools-in-china/" target="_blank" rel="noopener">Bilingual Private Schools in China Guide: Right Fit?</a></div>
+<div class="ncard-summary">文章解析了中国双语私立学校的典型模式：通常为K-12，融合中国国家课程与国际课程，以中英双语教学为主，学生主体为中国学生，但也向外国学生开放。这类学校旨在培养兼具本土根基与国际视野的人才。</div>
+<div class="ncard-meta"><span>来源：Alifa EdTech Blog</span><span>2026-03-26</span><a class="ncard-source-link" href="https://blog.alifaedtech.com/bilingual-private-schools-in-china/" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">这项研究关注双语学校的在线教学实践，与德英乐的教育场景高度相关。我们应持续关注并借鉴此类教学研究，优化线上线下融合的双语教学模式，提升跨文化教学的效果与学生参与度。</div></div>
-</div>
-<div class="ncard" data-tag="t-compete">
-<div class="ncard-body">
-<div class="ncard-tag t-compete">师资招聘</div>
-<div class="ncard-title"><a href="https://teast.co/job/current-openings-in-internatiaonal-bilingual-schools-kindergartens-in-many-cities-in-china-LeadingSchoo1703641680000" target="_blank" rel="noopener">中国多地国际双语学校持续招聘外籍教师</a></div>
-<div class="ncard-summary">招聘信息显示，北京顺义区等地K-12双语学校持续为2024年8月入职岗位招聘国际教师。学校为外籍教师及其符合条件的家属提供首次来华签证费用和体检费用的报销，反映了国际学校对优质外籍师资的稳定需求以及为吸引人才提供的配套支持。</div>
-<div class="ncard-meta"><span>来源：teast.co</span><span>2026-03-24</span><a class="ncard-source-link" href="https://teast.co/job/current-openings-in-internatiaonal-bilingual-schools-kindergartens-in-many-cities-in-china-LeadingSchoo1703641680000" target="_blank" rel="noopener">阅读原文 →</a></div>
-</div>
-<div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">稳定的高质量外籍师资队伍是保障双语教育品质的关键。德英乐需持续优化教师招聘、培训与发展体系，提供具有竞争力的工作与生活环境，吸引并留住全球优秀的教育人才。</div></div>
+<div class="persp-text">这精准描述了德英乐“中西融合”的办学定位。我们应持续优化国家课程与国际课程（如IB、CAIE）的融合路径，强化双语教学特色，巩固在沪上双语教育领域的领先地位。</div></div>
 </div>
 </div>
 <div class="sec-head" id="s-insight"><div class="sec-icon gold"></div><div class="sec-title">教育深度观察</div><div class="sec-line"></div></div>
 <div class="news-list">
-<div class="ncard featured" data-tag="t-insight">
+<div class="ncard featured" data-tag="t-enroll">
 <div class="ncard-body">
-<div class="ncard-tag t-insight">结构重塑</div>
-<div class="ncard-title"><a href="https://openaxo.com/education/china-2026-education-policy-analysis" target="_blank" rel="noopener">2026中国教育政策深度分析：人口变局下的结构重塑</a></div>
-<div class="ncard-summary">分析文章指出，根据2026年全国教育工作会议精神，中国教育发展的核心逻辑已从“规模扩张”彻底转向“结构适配”与“提质扩容”。政策将应对人口结构变化作为资源配置的首要考量，风向标可概括为“一减一增”，即减少低效供给，增加优质、适配的教育资源。这要求教育机构必须更加精准地定位和服务目标人群。</div>
-<div class="ncard-meta"><span>来源：openaxo.com</span><span>2026-02-16</span><a class="ncard-source-link" href="https://openaxo.com/education/china-2026-education-policy-analysis" target="_blank" rel="noopener">阅读原文 →</a></div>
+<div class="ncard-tag t-enroll">市场动态</div>
+<div class="ncard-title"><a href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener">上海国际学校2026春季招生全面启动：世外、上中国际等多校开放日安排公布</a></div>
+<div class="ncard-summary">2026年上海国际学校春季招生已正式拉开帷幕，世外、包玉刚、WLSA上海等多所知名学校陆续发布招生信息及校园开放日安排。招生节奏较往年加快，显示市场对优质国际教育学位的持续需求以及学校对优秀生源的激烈争夺。</div>
+<div class="ncard-meta"><span>来源：国际学校百科</span><span>2026-03-26</span><a class="ncard-source-link" href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener">阅读原文 →</a></div>
 </div>
 <div class="ncard-persp"><div class="persp-label">德英乐视角</div>
-<div class="persp-text">面对人口结构变化和教育政策转向，德英乐需更加注重教育服务的“提质”与“特色化”。应充分发挥K-12一贯制双语教育的体系优势，提供从小学到高中无缝衔接的优质教育，在结构优化的市场中强化品牌吸引力。</div></div>
+<div class="persp-text">面对激烈的春季招生竞争，德英乐旗下各校区需精心策划开放日与招生活动，清晰传达我校“中西融合、全人教育”的独特价值，并优化招生流程与服务，吸引并锁定目标家庭。</div></div>
 </div>
 </div>
 
@@ -463,55 +557,50 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 <div class="sh-header-text">上海国际教育·双语学校</div>
 <div class="sh-header-sub">专栏</div>
 </div>
+<button class="sh-collapse-toggle" id="shCollapseToggle" onclick="toggleShCollapseM()">展开上海专栏内容</button>
 <div class="sh-list" id="shList">
 
 <div class="sh-item">
-<div class="sh-item-tag">招生动态</div>
-<div class="sh-item-title"><a href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener">上海国际学校2026春季招生全面启动</a></div>
-<div class="sh-item-desc">2026年上海国际学校春季招生已正式拉开帷幕，世外、英澳美、宏文等多所知名学校公布招生安排及校园开放日时间。</div>
-<div class="sh-item-meta">国际学校百科 · 2026-03-24 · <a class="ncard-source-link" href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="http://sh.yuloo.com/guojixuexiao/news/2509/359317.shtml" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="http://sh.yuloo.com/guojixuexiao/news/2509/359317.shtml" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item">
-<div class="sh-item-tag">学校盘点</div>
-<div class="sh-item-title"><a href="http://sh.yuloo.com/guojixuexiao/zxzn/2510/362279.shtml" target="_blank" rel="noopener">2026年招生|上海16区国际学校盘点（课程体系&学费）</a></div>
-<div class="sh-item-desc">随着2026招生季开启，文章盘点了上海16区国际学校清单，包含课程体系、学费等关键信息，为家长择校提供参考。</div>
-<div class="sh-item-meta">sh.yuloo.com · 2026-03-24 · <a class="ncard-source-link" href="http://sh.yuloo.com/guojixuexiao/zxzn/2510/362279.shtml" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="http://www.ischoolbk.cn/news/8376.html" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item">
-<div class="sh-item-tag">招生指南</div>
-<div class="sh-item-title"><a href="https://guoji.114study.com/news/25330/" target="_blank" rel="noopener">上海国际学校2026春季招生盘点｜优质教育全指南</a></div>
-<div class="sh-item-desc">文章全面梳理上海国际学校2026年春季招生信息，包括招生时间轴、学校动态等，帮助家长把握关键节点。</div>
-<div class="sh-item-meta">远播国际教育 · 2026-03-24 · <a class="ncard-source-link" href="https://guoji.114study.com/news/25330/" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="http://m.guojixuexiao.net/ischool/gjnews/16859.html" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="http://m.guojixuexiao.net/ischool/gjnews/16859.html" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item">
-<div class="sh-item-tag">招生汇总</div>
-<div class="sh-item-title"><a href="http://www.guojixuexiao.net/ischool/gjnews/16859.html" target="_blank" rel="noopener">上海国际学校2026招生信息汇总：入学要求、课程设置与报考时间</a></div>
-<div class="sh-item-desc">2026春招季提前，世外、平和、光剑、领科等沪上热门国际学校均已启动招生活动，招生节奏加快。</div>
-<div class="sh-item-meta">www.guojixuexiao.net · 2026-03-24 · <a class="ncard-source-link" href="http://www.guojixuexiao.net/ischool/gjnews/16859.html" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="https://guoji.114study.com/news/25330/" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="https://guoji.114study.com/news/25330/" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item">
-<div class="sh-item-tag">高中招生</div>
-<div class="sh-item-title"><a href="https://www.10100.com/article/38753054" target="_blank" rel="noopener">上海杨浦双语国际高中2026年招生简章发布</a></div>
-<div class="sh-item-desc">上海杨浦某双语国际高中发布2026年招生简章，计划招生120人，并公布了开放日安排及入学考纲。</div>
-<div class="sh-item-meta">大数跨境 · 2026-03-24 · <a class="ncard-source-link" href="https://www.10100.com/article/38753054" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="http://www.guojixuexiao.org/xxzx/21071.html" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="http://www.guojixuexiao.org/xxzx/21071.html" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item collapsed">
-<div class="sh-item-tag">春招动态</div>
-<div class="sh-item-title"><a href="http://www.guojixuexiao.org/xxzx/21071.html" target="_blank" rel="noopener">26年上海国际学校春招汇总来了！入学难度大不同</a></div>
-<div class="sh-item-desc">汇总上海多所国际学校2026年春招动态，包括包玉刚实验学校等名校的报名截止日期和入学考试要求。</div>
-<div class="sh-item-meta">国际学校网 · 2026-03-24 · <a class="ncard-source-link" href="http://www.guojixuexiao.org/xxzx/21071.html" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="https://www.10100.com/article/38753054" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="https://www.10100.com/article/38753054" target="_blank" rel="noopener">原文</a></div>
 </div>
 <div class="sh-item collapsed">
-<div class="sh-item-tag">校园开放</div>
-<div class="sh-item-title"><a href="https://news.qq.com/rain/a/20250412A04JRV00" target="_blank" rel="noopener">上海16区中小学校园开放日活动安排表</a></div>
-<div class="sh-item-desc">上海市义务教育入学报名系统开通后，各区义务教育学校在特定周末集中开展“校园开放日”活动。</div>
-<div class="sh-item-meta">腾讯新闻 · 2025-04-12 · <a class="ncard-source-link" href="https://news.qq.com/rain/a/20250412A04JRV00" target="_blank" rel="noopener">原文</a></div>
-</div>
-<div class="sh-item collapsed">
-<div class="sh-item-tag">民办招生</div>
-<div class="sh-item-title"><a href="https://zhuanlan.zhihu.com/p/1896256474033935969" target="_blank" rel="noopener">2025上海民办教育新变局：14校免学费+85校招生计划出炉</a></div>
-<div class="sh-item-desc">2025年上海民办学校招生季，受“购买学位”政策影响，14所学校实现免费就读，同时85所民办中小学招生计划公布。</div>
-<div class="sh-item-meta">知乎专栏 · 2026-03-24 · <a class="ncard-source-link" href="https://zhuanlan.zhihu.com/p/1896256474033935969" target="_blank" rel="noopener">原文</a></div>
+<div class="sh-item-tag">资讯</div>
+<div class="sh-item-title"><a href="https://www.shanghai.gov.cn/shanghai/download/gongkai/hff1661.pdf" target="_blank" rel="noopener"></a></div>
+<div class="sh-item-desc"></div>
+<div class="sh-item-meta"> · <a class="ncard-source-link" href="https://www.shanghai.gov.cn/shanghai/download/gongkai/hff1661.pdf" target="_blank" rel="noopener">原文</a></div>
 </div>
 
 
@@ -541,6 +630,9 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 <!-- BACK TO TOP -->
 <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
 
+<!-- MOBILE SHARE FLOATING BUTTON -->
+<button class="mobile-share-btn" id="mobileShareBtn" onclick="mobileShare()" title="分享">🔗</button>
+
 <!-- ARCHIVE PANEL -->
 <div class="archive-overlay" id="archiveOverlay" onclick="toggleArchive()"></div>
 <div class="archive-panel" id="archivePanel">
@@ -554,11 +646,11 @@ nav .archive-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 <script>
 // === Current Issue Metadata ===
 var CURRENT_ISSUE = {
-  issue: '005',
-  date: '2026-03-24',
-  dateDisplay: '2026年03月24日 星期二',
-  title: '教育行业日报 第005期',
-  newsCount: 10,
+  issue: '007',
+  date: '2026-03-26',
+  dateDisplay: '2026年03月26日 星期四',
+  title: '教育行业日报 第007期',
+  newsCount: 8,
   url: window.location.href
 };
 
@@ -586,12 +678,35 @@ if(localStorage.getItem('dtd-dark')==='1'){
   document.querySelector('.dark-toggle').textContent='☀️';
 }
 
-// === Mobile Nav ===
+// === Mobile Nav with slide animation ===
 function toggleMobileNav(){
-  document.getElementById('mobileNav').classList.toggle('open');
+  var nav=document.getElementById('mobileNav');
+  var btn=document.getElementById('hamburgerBtn');
+  var isOpen=nav.classList.contains('open');
+  if(isOpen){
+    nav.style.maxHeight='0';
+    nav.style.padding='0 20px';
+    btn.classList.remove('open');
+    setTimeout(function(){nav.classList.remove('open')},350);
+  }else{
+    nav.classList.add('open');
+    nav.style.display='flex';
+    btn.classList.add('open');
+    // force reflow then animate
+    nav.offsetHeight;
+    nav.style.maxHeight=nav.scrollHeight+'px';
+    nav.style.padding='12px 20px';
+  }
 }
 document.querySelectorAll('.mobile-nav a').forEach(function(a){
-  a.addEventListener('click',function(){document.getElementById('mobileNav').classList.remove('open')});
+  a.addEventListener('click',function(){
+    var nav=document.getElementById('mobileNav');
+    var btn=document.getElementById('hamburgerBtn');
+    nav.style.maxHeight='0';
+    nav.style.padding='0 20px';
+    btn.classList.remove('open');
+    setTimeout(function(){nav.classList.remove('open')},350);
+  });
 });
 
 // === Shanghai Toggle ===
@@ -602,6 +717,36 @@ function toggleShanghai(){
   items.forEach(function(el){el.style.display=shExpanded?'block':'none'});
   document.getElementById('shToggle').textContent=shExpanded?'收起 ▴':'展开更多 ▾';
 }
+
+// === Shanghai Mobile Collapse ===
+var shMobileCollapsed=true;
+function toggleShCollapseM(){
+  var list=document.getElementById('shList');
+  var toggle=document.getElementById('shCollapseToggle');
+  shMobileCollapsed=!shMobileCollapsed;
+  if(shMobileCollapsed){
+    list.classList.remove('mobile-expanded');
+    list.classList.add('mobile-collapsed');
+    toggle.textContent='展开上海专栏内容';
+    toggle.classList.add('collapsed');
+  }else{
+    list.classList.remove('mobile-collapsed');
+    list.classList.add('mobile-expanded');
+    toggle.textContent='收起上海专栏内容';
+    toggle.classList.remove('collapsed');
+  }
+}
+// Initialize mobile collapse state
+(function(){
+  if(window.innerWidth<=900){
+    var list=document.getElementById('shList');
+    if(list){
+      list.classList.add('mobile-collapsed');
+      var toggle=document.getElementById('shCollapseToggle');
+      if(toggle)toggle.classList.add('collapsed');
+    }
+  }
+})();
 
 // === Tag Filter ===
 document.querySelectorAll('.filter-btn').forEach(function(btn){
@@ -619,6 +764,8 @@ document.querySelectorAll('.filter-btn').forEach(function(btn){
     document.querySelectorAll('.news-list').forEach(function(list){
       var visible=list.querySelectorAll('.ncard:not([style*="display: none"])');
       var head=list.previousElementSibling;
+      // skip dividers
+      while(head&&head.classList&&head.classList.contains('sec-divider')){head=head.previousElementSibling}
       if(head&&head.classList.contains('sec-head')){
         head.style.display=visible.length?'':'none';
       }
@@ -637,6 +784,97 @@ document.querySelectorAll('.ncard').forEach(function(card){
   card.style.animationPlayState='paused';
   observer.observe(card);
 });
+
+// === Active Nav Highlighting based on scroll (Intersection Observer) ===
+(function(){
+  var sections=document.querySelectorAll('[id^="s-"],#sh-section');
+  if(!sections.length)return;
+  var navLinks=document.querySelectorAll('nav a[data-nav], .mobile-nav a[data-nav]');
+  var currentActive='all';
+  var navObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id=entry.target.getAttribute('id');
+        if(id){
+          currentActive=id;
+          navLinks.forEach(function(link){
+            link.classList.remove('nav-active');
+            if(link.getAttribute('data-nav')===id){
+              link.classList.add('nav-active');
+            }
+          });
+        }
+      }
+    });
+  },{rootMargin:'-80px 0px -60% 0px',threshold:0});
+  sections.forEach(function(sec){navObserver.observe(sec)});
+})();
+
+// === Key Points Bar (populate from first news title per section) ===
+(function(){
+  var scroll=document.getElementById('kpScroll');
+  if(!scroll)return;
+  var sections=document.querySelectorAll('.news-list');
+  var dotColors=['navy','red','blue','green'];
+  var items=[];
+  sections.forEach(function(sec,i){
+    var firstCard=sec.querySelector('.ncard');
+    if(firstCard){
+      var titleEl=firstCard.querySelector('.ncard-title a');
+      if(!titleEl)titleEl=firstCard.querySelector('.ncard-title');
+      if(titleEl){
+        var text=titleEl.textContent.trim();
+        if(text){
+          var color=dotColors[i%dotColors.length];
+          items.push('<div class="kp-item"><span class="kp-dot '+color+'"></span>'+text+'</div>');
+        }
+      }
+    }
+  });
+  if(items.length){
+    scroll.innerHTML=items.join('');
+  }else{
+    document.getElementById('keyPointsBar').style.display='none';
+  }
+})();
+
+// === Share Page URL ===
+function sharePageURL(){
+  var url=window.location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){showShareToast()}).catch(function(){fallbackCopy(url)});
+  }else{
+    fallbackCopy(url);
+  }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');
+  ta.value=text;
+  ta.style.position='fixed';
+  ta.style.left='-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try{document.execCommand('copy');showShareToast()}catch(e){}
+  document.body.removeChild(ta);
+}
+function showShareToast(){
+  var toast=document.getElementById('shareToast');
+  toast.classList.add('show');
+  setTimeout(function(){toast.classList.remove('show')},2000);
+}
+
+// === Mobile Share (navigator.share or fallback) ===
+function mobileShare(){
+  if(navigator.share){
+    navigator.share({
+      title:CURRENT_ISSUE.title,
+      text:'教育行业日报 第'+CURRENT_ISSUE.issue+'期 - '+CURRENT_ISSUE.dateDisplay,
+      url:window.location.href
+    }).catch(function(){});
+  }else{
+    sharePageURL();
+  }
+}
 
 // === Archive System ===
 function getArchive(){
